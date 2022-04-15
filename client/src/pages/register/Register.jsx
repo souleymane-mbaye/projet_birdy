@@ -29,7 +29,7 @@ export default function Register() {
         // email: email.current.value,
         password: password.current.value,
         confirmpassword: passwordAgain.current.value,
-        lastname: lastname.current.value,
+        lastname: lastname.current.value, 
         firstname: firstname.current.value,
       };
       /* puis on utilise un post pour inscrire l'utilisateur puis on utilise 
