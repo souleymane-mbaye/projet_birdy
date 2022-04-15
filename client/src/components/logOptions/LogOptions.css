@@ -1,0 +1,44 @@
+
+
+button:hover{
+    background-color: rgb(105, 105, 105);
+    color: white;
+    
+}
+
+
+.connect{
+    background-color: #1d9bf0;
+    color:  white;
+    border: 1px solid transparent;
+    border-radius: 20px;
+    font-size: 20px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    padding: 2% 30%;
+    font-weight:bold;
+    cursor: pointer;
+    text-decoration: none;
+}
+.insc{
+    border: 1px solid transparent;
+    border-radius: 20px;
+    font-size: 20px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    padding: 2% 30%;
+    font-weight:bold;
+    cursor: pointer;
+    border-color: #8c8c8c !important;
+    text-decoration: none;
+    background-color: rgb(168, 163, 163);
+    color: black;
+}
+.option{
+    margin: auto;
+    width: 100%;
+    padding: 20px;
+      
+}
+
+.blocBtn{
+    margin: 20% 0%;
+}
