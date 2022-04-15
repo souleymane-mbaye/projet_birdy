@@ -24,23 +24,29 @@ function init(db) {
 
   router.post("/user/login", async (req, res) => {
     try {
-      const { login, password } = req.body;
+      let { email, login, password } = req.body;
       // Erreur sur la requête HTTP
-      if (!login || !password) {
+      if ((!login && !email) || !password) {
         res.status(400).json({
           status: 400,
-          message: "Requête invalide : login et password nécessaires",
+          message: "Requête invalide : login/email et password nécessaires",
         });
         return;
       }
-      if (!(await users.exists(login))) {
+
+      user_email = email && users.exists_email(email);
+      if (!user_email && !(await users.exists_login(login))) {
         res.status(401).json({
           status: 401,
           message: "Utilisateur inconnu",
         });
         return;
       }
-      let userid = await users.checkpassword(login, password);
+
+      if(user_email)
+        login = user_email.login
+
+      let userid = await users.check_login_password(login, password);
       if (userid) {
         // Avec middleware express-session
         req.session.regenerate(function (err) {
@@ -141,8 +147,8 @@ function init(db) {
     });
 
   router.post("/user", async (req, res) => {
-    const { login, password, confirmpassword, lastname, firstname } = req.body;
-    if (!login || !password || !confirmpassword || !lastname || !firstname) {
+    const { email, login, password, confirmpassword, lastname, firstname } = req.body;
+    if (!email || !login || !password || !confirmpassword || !lastname || !firstname) {
       res.status(400).send("Missing fields");
       return;
     }
@@ -152,7 +158,14 @@ function init(db) {
       return;
     }
 
-    if (await users.exists(login)) {
+    if (await users.exists_login(email)) {
+      res.status(401).json({
+        status: 401,
+        message: "Email déjà pris",
+      });
+      return;
+    }
+    if (await users.exists_login(login)) {
       res.status(401).json({
         status: 401,
         message: "Login déjà pris",
@@ -161,7 +174,7 @@ function init(db) {
     }
 
     users
-      .create(login, password, lastname, firstname)
+      .create(email, login, password, lastname, firstname)
       .then((user_id) => res.status(201).send({ id: user_id }))
       .catch((err) => res.status(500).send(err));
   });
@@ -180,7 +193,7 @@ function init(db) {
         return;
       }
       
-      user = await users.existsID(req.params.userid)
+      user = await users.exists_id(req.params.userid)
       if (!user) {
         res.status(401).json({
           status: 401,
