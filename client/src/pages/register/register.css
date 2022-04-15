@@ -168,10 +168,6 @@ button:hover {
   -moz-transition: all 0.4s;
   transition: all 0.4s;
 }
-.logo{
-  width: 600px;
-  height: 400px;
-}
 .input100:focus + .focus-input100 + .symbol-input100 {
   color: #57b846;
   padding-left: 28px;
@@ -188,6 +184,10 @@ button:hover {
   padding-top: 20px;
 }
 
+.logo{
+  height: 400px;
+  width: 400px;
+}
 .login100-form-btn {
 
   font-size: 15px;

@@ -26,5 +26,11 @@
   },
   "directories": {
     "test": "test"
+<<<<<<< Updated upstream
   }
+=======
+  },
+  "devDependencies": {}
+  
+>>>>>>> Stashed changes
 }
