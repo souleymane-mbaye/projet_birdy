@@ -6,6 +6,9 @@ import Rightbar from "../../components/rightbar/Rightbar";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router";
+import pic from "../../assets/person/noAvatar.png";
+import cover from "../../assets/person/noCover.png";
+
 
 export default function Profile() {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -33,7 +36,7 @@ export default function Profile() {
                 src={
                   user.coverPicture
                     ? PF + user.coverPicture
-                    : PF + "person/noCover.png"
+                    : cover
                 }
                 alt=""
               />
@@ -42,7 +45,7 @@ export default function Profile() {
                 src={
                   user.profilePicture
                     ? PF + user.profilePicture
-                    : PF + "person/noAvatar.png"
+                    : pic
                 }
                 alt=""
               />

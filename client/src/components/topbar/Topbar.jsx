@@ -3,6 +3,9 @@ import { Search, Person, Chat, Notifications } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import pic from "../../assets/person/noAvatar.png";
+import logo from "../../assets/birdyRBG.png";
+
 
 export default function Topbar() {
   const { user } = useContext(AuthContext);
@@ -12,7 +15,7 @@ export default function Topbar() {
       <div className="topbarLeft">
         <Link to="/" style={{ textDecoration: "none" }}>
           {/* le text decoration sert a enelever l'effet de lien qui est sousligne  */}
-          <img className="logo" src={PF+"birdyRBG.png"} alt=""></img>
+          <img className="logo2" src={logo} alt=""></img>
         </Link>
       </div>
       <div className="topbarCenter">
@@ -47,7 +50,7 @@ export default function Topbar() {
             src={
               user.profilePicture
                 ? PF + user.profilePicture
-                : PF + "person/noAvatar.png"
+                : pic
             }
             alt=""
             className="topbarImg"
