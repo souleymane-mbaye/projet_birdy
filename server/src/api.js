@@ -180,67 +180,126 @@ function init(db) {
   });
 
   router.post(
-    "/:userid/upload/profil",
+    "/user/:userid/upload-profil",
     upload.single("file"),
     async (req, res) => {
+      try {
+        
+        if(req.params.userid!=req.session.userid) {
+          res.status(401).json({
+            status: 401,
+            message: "Utilisateur non connecté",
+          });
+          return;
+        }
+        
+        user = await users.exists_id(req.params.userid)
+        if (!user) {
+          res.status(401).json({
+            status: 401,
+            message: "Userid inconnu",
+          });
+          return;
+        }
 
-      if(req.params.userid!=res.session.userid) {
-  
-        res.status(401).json({
-          status: 401,
-          message: "Utilisateur non connecté",
-        });
-        return;
-      }
-      
-      user = await users.exists_id(req.params.userid)
-      if (!user) {
-        res.status(401).json({
-          status: 401,
-          message: "Userid inconnu",
-        });
-        return;
-      }
+        if (
+          req.file.detectedMimeType != "image/jpg" &&
+          req.file.detectedMimeType != "image/png" &&
+          req.file.detectedMimeType != "image/jpeg"
+        ) {
+          res.status(401).json({
+            status: 401,
+            message: "Invalid file type",
+          });
+          return;
+        }
 
-      if (
-        req.file.detectedMimeType != "image/jpg" &&
-        req.file.detectedMimeType != "image/png" &&
-        req.file.detectedMimeType != "image/jpeg"
-      ) {
-        res.status(401).json({
-          status: 401,
-          message: "Invalid file type",
-        });
-        return;
-      }
+        if (req.file.size > 900000000) {
+          res.status(401).json({
+            status: 401,
+            message: "Max size",
+          });
+          return;
+        }
+        // const fileN = `${__dirname}/../data/uploads/profil/${fileName}`
+        // console.log("FilName",fileN,"\n\n");
+        
+        
+        const fileName = user.login + ".jpg";
+        if (!(await users.upload_profil(req.params.userid, fileName))) {
+          res.status(401).json({
+            status: 401,
+            message: "Utilisateur inconnu",
+          });
+          return;
+        }
 
-      if (req.file.size > 900000000) {
-        res.status(401).json({
-          status: 401,
-          message: "Max size",
-        });
-        return;
-      }
-      // const fileN = `${__dirname}/../../client/public/uploads/profil/${fileName}`
-      // console.log("FilName",fileN,"\n\n");
-      
-      
-      const fileName = user.login + ".jpg";
-      if (!(await users.uploadAvatar(req.params.userid, fileName))) {
-        res.status(401).json({
-          status: 401,
-          message: "Utilisateur inconnu",
-        });
-        return;
-      }
+        await pipeline(
+          req.file.stream,
+          fs.createWriteStream(
+            `${__dirname}/../data/uploads/profil/${fileName}`
+          )
+        );
 
-      await pipeline(
-        req.file.stream,
-        fs.createWriteStream(
-          `${__dirname}/../../client/public/uploads/profil/${fileName}`
-        )
-      );
-      res.status(201).json({ message: "profil uploadé" });
+        res.status(201).json({ message: "profil uploadé" });
+        return;
+      } catch (e) {
+        // Toute autre erreur
+        res.status(500).json({
+          status: 500,
+          message: "erreur interne",
+          details: (e || "Erreur inconnue").toString(),
+        });
+      }
+    }
+  );
+
+  router.patch(
+    "/user/:userid/bio",
+    async (req, res) => {
+      try {
+
+        const {bio} = req.body;
+        if (!bio) {
+          res.status(400).send("Missing fields");
+          return;
+        }
+        
+        // if(req.params.userid!=req.session.userid) {
+        //   res.status(401).json({
+        //     status: 401,
+        //     message: "Utilisateur non connecté",
+        //   });
+        //   return;
+        // }
+        
+        user = await users.exists_id(req.params.userid)
+        if (!user) {
+          res.status(401).json({
+            status: 401,
+            message: "Userid inconnu",
+          });
+          return;
+        }
+
+        if (!(await users.set_bio(req.params.userid, bio))) {
+          res.status(401).json({
+            status: 401,
+            message: "Erreur de set bio",
+          });
+          return;
+        }
+
+        res.status(201).json({ message: "bio changé" });
+        return;
+      } catch (e) {
+        // Toute autre erreur
+        res.status(500).json({
+          status: 500,
+          message: "erreur interne",
+          details: (e || "Erreur inconnue").toString(),
+        });
+      }
     }
   );
 

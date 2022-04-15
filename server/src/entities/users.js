@@ -24,7 +24,7 @@ class Users {
           firstname: firstname,
           followings: [],
           followers: [],
-          avatar: "",
+          profil: "",
           bio: "",
         };
 
@@ -188,13 +188,15 @@ class Users {
     });
   }
   async exists_id(user_id) {
+    console.log("User id i",user_id);
     return new Promise((resolve, reject) => {
       this.db.findOne({ _id: user_id }, (err, doc) => {
         if (err) {
           //erreur
+          console.log("Reject");
           reject();
         } else {
-          // console.log("ExisID",doc);
+          console.log("ExisID",doc);
           if (doc) {
             resolve(doc);
           } else resolve(false);
@@ -244,12 +246,32 @@ class Users {
     });
   }
 
-  uploadAvatar(user_id, fileName) {
+  upload_profil(user_id, fileName) {
     return new Promise((resolve, resject) => {
       this.db.update(
         { _id: user_id },
         {
-          $set: { avatar: fileName},
+          $set: { profil: fileName},
+        },
+        {},
+        (err, doc) => {
+          if (err) {
+            resject();
+          } else {
+            if (!doc) resolve(false);
+            else resolve(true);
+          }
+        }
+      );
+    });
+  }
+
+  async set_bio(user_id, bio) {
+    return new Promise((resolve, resject) => {
+      this.db.update(
+        { _id: user_id },
+        {
+          $set: { bio: bio},
         },
         {},
         (err, doc) => {
