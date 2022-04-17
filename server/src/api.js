@@ -34,20 +34,20 @@ function init(db) {
         return;
       }
 
-      user_email = email && users.exists_email(email);
-      if (!user_email && !(await users.exists_login(login))) {
+      let user_e = email && await users.exists_email(email);
+      let user_l = login && await users.exists_login(login);
+      let user = user_e ? user_e : user_l;
+
+      if (!user) {
         res.status(401).json({
           status: 401,
-          message: "Utilisateur inconnu",
+          message: "Utilisateur(email/login) inconnu",
         });
         return;
       }
 
-      if(user_email)
-        login = user_email.login
-
-      let userid = await users.check_login_password(login, password);
-      if (userid) {
+      let checked = await users.check_login_password(user.login, password);
+      if (checked) {
         // Avec middleware express-session
         req.session.regenerate(function (err) {
           if (err) {
@@ -57,8 +57,9 @@ function init(db) {
             });
           } else {
             // C'est bon, nouvelle session créée
-            req.session.userid = userid;
+            req.session.userid = user._id;
             console.log("Logout", req.session);
+            console.log("User connecté",user);
             res.status(200).json({
               status: 200,
               message: "Login et mot de passe accepté",
