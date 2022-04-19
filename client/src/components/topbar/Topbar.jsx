@@ -9,7 +9,7 @@ import logo from "../../assets/birdyRBG.png";
 
 export default function Topbar() {
   const { user } = useContext(AuthContext);
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  console.log("test test ",user)
   return (
     <div className="topbarContainer">
       <div className="topbarLeft">
@@ -32,24 +32,22 @@ export default function Topbar() {
           <div className="topbarIconItem">
             <Person />
           </div>
-          <div className="topbarIconItem">
+          {/* <div className="topbarIconItem">
             <Link to={"/messenger"} style={{ textDecoration: "none" , color: "green"}}>
               <Chat />
             </Link>
             
-          </div>
+          </div> */}
 
         </div>
-        <Link to={`/profile/${user.username}`} style={{ textDecoration: "none", color: "white"}}>
-          <span className="topbarLink">{user.username}</span>
+        <Link to={`/profile/${user.user._id}`} style={{ textDecoration: "none", color: "white"}}>
+          <span className="topbarLink">{user.user.login}</span>
         </Link>
-        
-
-        <Link to={`/profile/${user.username}`}>
+        <Link to={`/profile/${user.user._id}`}>
           <img
             src={
-              user.profilePicture
-                ? PF + user.profilePicture
+              user.user.profile
+                ? user.user.profile
                 : pic
             }
             alt=""

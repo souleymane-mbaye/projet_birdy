@@ -43,7 +43,22 @@
   font-weight: 500;
   margin-bottom: 10px;
 }
-
+.rightbarUpdateButton
+{
+  margin-top: 30px;
+  margin-bottom: 10px;
+  border: none;
+  background-color: #18f2bb;
+  color: rgb(7, 0, 0);
+  border-radius: 5px;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
 .rightbarInfo{
   margin-bottom: 30px;
 }

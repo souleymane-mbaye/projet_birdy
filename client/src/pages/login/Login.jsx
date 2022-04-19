@@ -9,7 +9,6 @@ import { useHistory } from "react-router";
 import logo from "../../assets/birdyRBG.png";
 
 export default function Login() {
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   //useRef est un hooks que l'on utilise pour recuperer l'email et le mps du formulaire
   const email = useRef();
   const password = useRef();
@@ -33,7 +32,7 @@ export default function Login() {
       password: password.current.value,
     };
     loginCall(
-      { email: email.current.value, password: password.current.value },
+      { login: login_val,email: email_val, password: password.current.value },
       dispatch
     );
     
@@ -75,7 +74,7 @@ export default function Login() {
                
               </div>
 
-              <div className="wrap-input100 validate-input" data-validate = "Password is required">
+              <div className="wrap-input100 validate-input" data-validate = "Entrer le mot de passe">
                 <input className="input100" required ref={password} type="password" name="pass" placeholder="Mot de passe"/>
                 <span className="focus-input100"></span>
                 
@@ -113,9 +112,7 @@ export default function Login() {
               
               <div >
                 
-                <Link className="txt2" to="#">
-                  Mot de passe oublie?
-                </Link>
+                
               </div>
 
             </form>

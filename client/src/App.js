@@ -2,7 +2,8 @@ import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 import Profile from "./pages/profile/Profile";
 import Register from "./pages/register/Register";
-import Setup from "./pages/setup/Setup"
+import Setup from "./pages/setup/Setup";
+import Update from "./pages/update/Update";
 import {
   BrowserRouter as Router,
   Switch,
@@ -25,8 +26,11 @@ function App() {
         <Route path="/register">
           {user ? <Redirect to="/" /> : <Register />}
         </Route>
-        <Route path="/profile/:username">
+        <Route path="/profile/:id">
           <Profile />
+        </Route>
+        <Route path="/update/:id">
+          <Update/>
         </Route>
       </Switch>
     </Router>

@@ -6,8 +6,30 @@ import {
 } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import LogoutIcon from '@mui/icons-material/Logout';
+import { AuthContext } from "../../context/AuthContext";
+import { useContext, useEffect, useState } from "react";
+import axios from "axios";
+import { useHistory } from "react-router";
 
-export default function Sidebar() {
+
+export default function  Sidebar() {
+
+  const history = useHistory();
+  const { user } = useContext(AuthContext);
+
+  const handleClick = async (e) => {
+    
+    e.preventDefault();
+    
+    try {
+      //ICI
+      await axios.delete(`/api/user/${user.user._id}/logout`);
+      history.push("/");
+    } catch (err) {
+      console.log(err,"erreur");
+    }
+  };
+
   return (
 
     <div className="sidebar">
@@ -21,12 +43,12 @@ export default function Sidebar() {
             </Link>
           </li>
       
-          <li className="sidebarListItem">
+          {/* <li className="sidebarListItem">
             <Link to={"/messenger"}  style={{ textDecoration: "none" , color: "darkslategray"}}>
               <Chat className="sidebarIcon" />
               <span className="sidebarListItemText">Messages</span>
             </Link>
-          </li>
+          </li> */}
           
           <li className="sidebarListItem">
             <Link to={""}  style={{ textDecoration: "none" , color: "darkslategray"}}>
@@ -35,7 +57,7 @@ export default function Sidebar() {
             </Link>
           </li>
           <li className="sidebarListItem">
-            <Link to={"/"}  style={{ textDecoration: "none" , color: "darkslategray"}}>
+            <Link to={"/"}  style={{ textDecoration: "none" , color: "darkslategray"}} onClick={handleClick}>
               <LogoutIcon className="sidebarIcon" />
               <span className="sidebarListItemText">Deconnexion</span>
             </Link>
@@ -48,3 +70,4 @@ export default function Sidebar() {
     </div>
   );
 }
+ 
