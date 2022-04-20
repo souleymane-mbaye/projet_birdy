@@ -9,6 +9,7 @@ import {
 import { useContext, useRef, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
+import Avatar  from "../../assets/person/noAvatar.png";
 
 export default function Share() {
   const { user } = useContext(AuthContext);
@@ -19,7 +20,7 @@ export default function Share() {
   const submitHandler = async (e) => {
     e.preventDefault();
     const newPost = {
-      userId: user._id,
+      userId: user.user._id,
       desc: desc.current.value,
     };
     if (file) {
@@ -34,9 +35,12 @@ export default function Share() {
       } catch (err) {}
     }
     try {
-      await axios.post("/posts", newPost);
+      //ICI
+      await axios.put(`apimessages/user/${user.user._id}/messages`, newPost);
       window.location.reload();
-    } catch (err) {}
+    } catch (err) {
+      console.log("erreur");
+    }
   };
 
   return (
@@ -46,14 +50,14 @@ export default function Share() {
           <img
             className="shareProfileImg"
             src={
-              user.profilePicture
-                ? PF + user.profilePicture
-                : PF + "person/noAvatar.png"
+              user.user.profilePicture
+                ? user.user.profile
+                : Avatar
             }
             alt=""
           />
           <input
-            placeholder={"Tweeter " + user.username }
+            placeholder={"Tweeter " + user.user.login }
             className="shareInput"
             ref={desc}
           />

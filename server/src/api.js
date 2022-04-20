@@ -54,16 +54,22 @@ function init(db) {
             res.status(500).json({
               status: 500,
               message: "Erreur interne",
-            });
+            }); 
           } else {
             // C'est bon, nouvelle session créée
             req.session.userid = user._id;
+<<<<<<< HEAD
             console.log("Session", req.session);
             console.log("User connecté", user);
             res.status(200).json({
               status: 200,
               message: "Login et mot de passe accepté",
             });
+=======
+            console.log("Logout", req.session);
+            console.log("User connecté",user);
+            res.status(200).json({user}); 
+>>>>>>> 585e93eb88b24296e6d139492a178a1e0d3e8ed2
           }
         });
         return;
@@ -120,6 +126,7 @@ function init(db) {
   router
     .route("/user/:userid")
     .get(async (req, res) => {
+      console.log("ttttttttttttttttttttttttttttttttttttttttt");
       try {
         const user = await users.get(req.params.userid);
         if (!user) res.sendStatus(404);

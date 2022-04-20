@@ -12,7 +12,7 @@ export default function Home() {
         <Sidebar />
         <Feed/>
         <Rightbar/>
-      </div>
+       </div>
     </>
   );
 }

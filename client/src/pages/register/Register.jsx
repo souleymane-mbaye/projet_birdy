@@ -12,7 +12,6 @@ export default function Register() {
   const password = useRef();
   const passwordAgain = useRef();
   const history = useHistory();
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [text,setText]=useState();
 
   /* avant d'envoyer les données on doit tout d'abord verifier 
@@ -36,8 +35,11 @@ export default function Register() {
         await axios.post("/api/user", user);
         history.push("/login");
       } catch (err) {
-                
-        if(err.response.status==402){
+          
+        if(err.response.status==400){
+          setText("Elements manquants");
+        }       
+        else if(err.response.status==402){
           setText("Les mots de passe sont differents");
         }else if(err.response.status==401){
           setText("Login deja pris");
@@ -63,7 +65,7 @@ export default function Register() {
                 Inscription
               </span>
 
-              <div className="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
+              <div className="wrap-input100 validate-input" data-validate = "email valide de la forme: ex@abc.xyz">
                 <input className="input100" type="email" ref={email} name="email" placeholder="Email"/>
                 <span className="focus-input100"></span>
                
