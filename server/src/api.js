@@ -294,7 +294,7 @@ function init(db) {
           message: "Erreur de set bio",
         });
         return;
-      }
+      } 
 
       res.status(201).json({ message: "bio changé" });
       return;
