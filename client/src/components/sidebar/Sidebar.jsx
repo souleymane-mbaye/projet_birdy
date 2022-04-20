@@ -10,20 +10,26 @@ import { AuthContext } from "../../context/AuthContext";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useHistory } from "react-router";
+import { logoutCall } from "../../apiCalls";
+
 
 
 export default function  Sidebar() {
 
   const history = useHistory();
   const { user } = useContext(AuthContext);
+  const { isFetching, dispatch } = useContext(AuthContext);
 
   const handleClick = async (e) => {
     
     e.preventDefault();
     
     try {
-      //ICI
-      await axios.delete(`/api/user/${user.user._id}/logout`);
+      await axios.delete("/api/user/"+user.user._id+"/logout");
+      logoutCall(
+        { },
+        dispatch
+      );
       history.push("/");
     } catch (err) {
       console.log(err,"erreur");

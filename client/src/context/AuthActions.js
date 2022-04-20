@@ -7,6 +7,14 @@ export const LoginSuccess = (user) => ({
   payload: user,
 });
 
+export const Logout = (userCredentials) => ({
+  type: "LOGOUT",
+});
+
+export const LogoutFail = (userCredentials) => ({
+  type: "LOGOUT_FAIL",
+});
+
 export const LoginFailure = () => ({
   type: "LOGIN_FAILURE",
 });

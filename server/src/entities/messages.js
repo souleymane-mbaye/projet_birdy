@@ -23,6 +23,7 @@ class Messages {
           reject();
         } else {
           // resolve(userid);
+          console.log("Created message",newDoc);
           resolve(newDoc);
         }
       });

@@ -60,10 +60,7 @@ function init(db) {
             req.session.userid = user._id;
             console.log("Session", req.session);
             console.log("User connecté", user);
-            res.status(200).json({
-              status: 200,
-              message: "Login et mot de passe accepté",
-            });
+            res.status(200).json({user});
           }
         });
         return;
@@ -86,6 +83,7 @@ function init(db) {
   });
 
   router.delete("/user/:userid/logout", (req, res) => {
+    //console.log("param userid",req.params.userid,"session lofout ",req.session);
     if (req.params.userid != req.session.userid) {
       res.status(401).json({
         status: 401,
@@ -103,7 +101,9 @@ function init(db) {
     });
 
     console.log("\nFermeture session",req.session);
-  });
+    return;
+  }); 
+  
 
   // permutation avec la suivante entraine une erreur
   router.get("/user/infos", async (req, res) => {

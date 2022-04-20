@@ -20,9 +20,15 @@ export default function Share() {
   const submitHandler = async (e) => {
     e.preventDefault();
     const newPost = {
-      userId: user.user._id,
-      desc: desc.current.value,
+      message: desc.current.value
     };
+    try {
+      //ICI
+      await axios.post("apimessages/user/"+user.user._id+"/messages", newPost);
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
+    }
     if (file) {
       const data = new FormData();
       const fileName = Date.now() + file.name;
@@ -31,16 +37,10 @@ export default function Share() {
       newPost.img = fileName;
       console.log(newPost);
       try {
-        await axios.post("/upload", data);
+        await axios.patch("/apimessages/user/"+user.user._id+"/messages", data);
       } catch (err) {}
     }
-    try {
-      //ICI
-      await axios.put(`apimessages/user/${user.user._id}/messages`, newPost);
-      window.location.reload();
-    } catch (err) {
-      console.log("erreur");
-    }
+    
   };
 
   return (

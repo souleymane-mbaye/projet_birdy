@@ -141,6 +141,7 @@ function init(db_users, db_messages) {
     })
     .post(async (req, res) => {
       try {
+        
         if (req.params.userid != req.session.userid) {
           res.status(401).json({
             status: 401,
@@ -159,7 +160,7 @@ function init(db_users, db_messages) {
           return;
         }
 
-        const user = await users.existsID(req.params.userid);
+        const user = await users.exists_id(req.params.userid);
         if (!user) {
           res.status(401).json({
             status: 401,
@@ -287,7 +288,7 @@ function init(db_users, db_messages) {
   });
 
   router.get("/user/:userid/infos", async (req, res) => {
-    user = await users.existsID(req.params.userid);
+    const user = await users.exists_id(req.params.userid);
     if (!user) {
       res.status(401).json({
         status: 401,
