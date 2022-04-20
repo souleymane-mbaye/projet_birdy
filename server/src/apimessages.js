@@ -1,6 +1,10 @@
 const express = require("express");
 const Users = require("./entities/users.js");
 const Messages = require("./entities/messages.js");
+const upload = require("multer")();
+const fs = require("fs");
+const { promisify } = require("util");
+const pipeline = promisify(require("stream").pipeline);
 
 function init(db_users, db_messages) {
   const router = express.Router();
@@ -43,7 +47,7 @@ function init(db_users, db_messages) {
           return;
         }
 
-        const user = await users.existsID(req.params.userid);
+        const user = await users.exists_id(req.params.userid);
         if (!user) {
           res.status(401).json({
             status: 401,
@@ -52,7 +56,7 @@ function init(db_users, db_messages) {
           return;
         }
 
-        const old_message = await messages.existsID(old_message_id);
+        const old_message = await messages.exists_id(old_message_id);
         if (!old_message) {
           res.status(401).json({
             status: 401,
@@ -101,7 +105,7 @@ function init(db_users, db_messages) {
           return;
         }
 
-        const user = await users.existsID(req.params.userid);
+        const user = await users.exists_id(req.params.userid);
         if (!user) {
           res.status(401).json({
             status: 401,
@@ -110,7 +114,7 @@ function init(db_users, db_messages) {
           return;
         }
 
-        const message = await messages.existsID(message_id);
+        const message = await messages.exists_id(message_id);
         if (!message) {
           res.status(401).json({
             status: 401,
@@ -169,12 +173,20 @@ function init(db_users, db_messages) {
           return;
         }
 
-        const id = await messages.create(
+        const mes = await messages.create(
           req.params.userid,
           user.login,
           message
         );
-        res.status(201).send({ id: id });
+        if (!mes) {
+          res.status(401).json({
+            status: 401,
+            message: "Userid inconnu",
+          });
+          return;
+        }
+
+        res.status(201).send({ id: mes._id });
 
         return;
       } catch (e) {
@@ -204,7 +216,7 @@ function init(db_users, db_messages) {
         return;
       }
 
-      const user = await users.existsID(req.params.userid);
+      const user = await users.exists_id(req.params.userid);
       if (!user) {
         res.status(401).json({
           status: 401,
@@ -247,7 +259,7 @@ function init(db_users, db_messages) {
         return;
       }
 
-      const user = await users.existsID(req.params.userid);
+      const user = await users.exists_id(req.params.userid);
       if (!user) {
         res.status(401).json({
           status: 401,
@@ -256,7 +268,7 @@ function init(db_users, db_messages) {
         return;
       }
 
-      const friend = await users.existsID(req.params.friendid);
+      const friend = await users.exists_id(req.params.friendid);
       if (!friend) {
         res.status(401).json({
           status: 401,
@@ -321,7 +333,7 @@ function init(db_users, db_messages) {
       return;
     }
 
-    user = await users.existsID(req.params.userid);
+    const user = await users.exists_id(req.params.userid);
     if (!user) {
       res.status(401).json({
         status: 401,
@@ -330,7 +342,7 @@ function init(db_users, db_messages) {
       return;
     }
 
-    message = await messages.existsID(message_id);
+    const message = await messages.exists_id(message_id);
     if (!message) {
       res.status(401).json({
         status: 401,
@@ -356,7 +368,7 @@ function init(db_users, db_messages) {
       return;
     }
 
-    user = await users.existsID(req.params.userid);
+    user = await users.exists_id(req.params.userid);
     if (!user) {
       res.status(401).json({
         status: 401,
@@ -365,7 +377,7 @@ function init(db_users, db_messages) {
       return;
     }
 
-    message = await messages.existsID(message_id);
+    message = await messages.exists_id(message_id);
     if (!message) {
       res.status(401).json({
         status: 401,
@@ -399,7 +411,7 @@ function init(db_users, db_messages) {
       return;
     }
 
-    user = await users.existsID(req.params.userid);
+    user = await users.exists_id(req.params.userid);
     if (!user) {
       res.status(401).json({
         status: 401,
@@ -408,7 +420,7 @@ function init(db_users, db_messages) {
       return;
     }
 
-    message = await messages.existsID(message_id);
+    message = await messages.exists_id(message_id);
     if (!message) {
       res.status(401).json({
         status: 401,
@@ -443,7 +455,7 @@ function init(db_users, db_messages) {
       return;
     }
 
-    user = await users.existsID(req.params.userid);
+    user = await users.exists_id(req.params.userid);
     if (!user) {
       res.status(401).json({
         status: 401,
@@ -452,7 +464,7 @@ function init(db_users, db_messages) {
       return;
     }
 
-    message = await messages.existsID(message_id);
+    message = await messages.exists_id(message_id);
     if (!message) {
       res.status(401).json({
         status: 401,
@@ -490,7 +502,7 @@ function init(db_users, db_messages) {
       return;
     }
 
-    user = await users.existsID(req.params.userid);
+    user = await users.exists_id(req.params.userid);
     if (!user) {
       res.status(401).json({
         status: 401,
@@ -499,7 +511,7 @@ function init(db_users, db_messages) {
       return;
     }
 
-    message = await messages.existsID(message_id);
+    message = await messages.exists_id(message_id);
     if (!message) {
       res.status(401).json({
         status: 401,
@@ -524,6 +536,86 @@ function init(db_users, db_messages) {
       .then((id) => res.status(201).send({ id: id }))
       .catch((err) => res.status(500).send(err));
   });
+
+  router.post(
+    "/user/:userid/messages/:messageid/upload-picture",
+    upload.single("file"),
+    async (req, res) => {
+      try {
+        if (req.params.userid != req.session.userid) {
+          res.status(401).json({
+            status: 401,
+            message: "Utilisateur non connecté",
+          });
+          return;
+        }
+    
+        const user = await users.exists_id(req.params.userid);
+        if (!user) {
+          res.status(401).json({
+            status: 401,
+            message: "Userid inconnu",
+          });
+          return;
+        }
+
+        message = await messages.exists_id(req.params.messageid);
+        if (!message) {
+          res.status(401).json({
+            status: 401,
+            message: "message id inconnu",
+          });
+          return;
+        }
+
+        if (
+          req.file.detectedMimeType != "image/jpg" &&
+          req.file.detectedMimeType != "image/png" &&
+          req.file.detectedMimeType != "image/jpeg"
+        ) {
+          res.status(401).json({
+            status: 401,
+            message: "Invalid file type",
+          });
+          return;
+        }
+
+        if (req.file.size > 900000000) {
+          res.status(401).json({
+            status: 401,
+            message: "Max size",
+          });
+          return;
+        }
+
+        const fileName = message._id + ".jpg";
+        if (!(await messages.upload_picture(req.params.userid, fileName))) {
+          res.status(401).json({
+            status: 401,
+            message: "Upload picture",
+          });
+          return;
+        }
+
+        await pipeline(
+          req.file.stream,
+          fs.createWriteStream(
+            `${__dirname}/../data/uploads/posts/${fileName}`
+          )
+        );
+
+        res.status(201).json({ message: "picture uploadé" });
+        return;
+      } catch (e) {
+        // Toute autre erreur
+        res.status(500).json({
+          status: 500,
+          message: "erreur interne",
+          details: (e || "Erreur inconnue").toString(),
+        });
+      }
+    }
+  );
 
   return router;
 }

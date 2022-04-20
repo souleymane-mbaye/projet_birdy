@@ -3,9 +3,9 @@ const { ObjectId } = require("bson");
 class Messages {
   constructor(db) {
     this.db = db;
-    // suite plus tard avec la BD
+    // suite plus tard avec la BD 
   }
-
+ 
   create(userid, name, text) {
     return new Promise(async (resolve, reject) => {
       const message = {
@@ -13,6 +13,7 @@ class Messages {
         author_name: name,
         date: new Date().getTime(),
         text: text,
+        picture: "",
         likes: [],
         comments: [],
       };
@@ -227,7 +228,7 @@ class Messages {
     });
   }
 
-  async existsID(message_id) {
+  async exists_id(message_id) {
     return new Promise((resolve, reject) => {
       this.db.findOne({ _id: message_id }, (err, doc) => {
         if (err) {
@@ -240,6 +241,26 @@ class Messages {
           } else resolve(false);
         }
       });
+    });
+  }
+
+  upload_picture(message_id, fileName) {
+    return new Promise((resolve, resject) => {
+      this.db.update(
+        { _id: message_id },
+        {
+          $set: { picture: fileName},
+        },
+        {},
+        (err, doc) => {
+          if (err) {
+            resject();
+          } else {
+            if (!doc) resolve(false);
+            else resolve(true);
+          }
+        }
+      );
     });
   }
 }

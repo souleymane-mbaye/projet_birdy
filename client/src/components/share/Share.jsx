@@ -24,22 +24,23 @@ export default function Share() {
     };
     try {
       //ICI
-      await axios.post("apimessages/user/"+user.user._id+"/messages", newPost);
+      const res=await axios.post("apimessages/user/"+user.user._id+"/messages", newPost);
       window.location.reload();
+      if (file) {
+        const data = new FormData();
+        const fileName = Date.now() + file.name;
+        data.append("name", fileName);
+        data.append("file", file);
+        newPost.img = fileName;
+        console.log(newPost);
+        
+        await axios.patch("/apimessages/user/"+user.user._id+"/messages/"+res.data.id+"/upload-picture", data);
+        
+      }
     } catch (err) {
       console.log(err);
     }
-    if (file) {
-      const data = new FormData();
-      const fileName = Date.now() + file.name;
-      data.append("name", fileName);
-      data.append("file", file);
-      newPost.img = fileName;
-      console.log(newPost);
-      try {
-        await axios.patch("/apimessages/user/"+user.user._id+"/messages", data);
-      } catch (err) {}
-    }
+    
     
   };
 

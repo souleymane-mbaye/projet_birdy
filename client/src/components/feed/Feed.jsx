@@ -14,8 +14,9 @@ export default function Feed({ id }) {
       //ICI
         ? await axios.get("/apimessages/user/"+id+"/infos")
         : await axios.get("/apimessages/messages");
+      
       setPosts(
-        res.data.sort((p1, p2) => {
+        res.data.messages.sort((p1, p2) => {
           return new Date(p2.date) - new Date(p1.date);
         })
       );

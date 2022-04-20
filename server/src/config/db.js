@@ -1,6 +1,6 @@
 var Datastore = require('nedb');
 
-db = {}
+db = {} 
 
 db.users = new Datastore('../../data/birdyUsersdb.mongodb')
 db.messages = new Datastore('../../data/birdyMessagesdb.mongodb')
@@ -19,6 +19,13 @@ db.messages.loadDatabase(function (err) {    // Callback is optional
     console.log("Chargement de la base de données messages (fichier) réussi")
 });
 
+// messages.find({}, (err, docs) => {
+//   if (err) {
+//     console.log("Erreur get all mes");
+//     console.log("Messages",docs);
+//   } else {
+//   }
+// });
 
 // vider la base de données
 // db.messages.remove({}, { multi: true }, function (err, numRemoved) {});

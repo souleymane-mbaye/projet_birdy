@@ -118,9 +118,8 @@ function init(db) {
   });
 
   router
-    .route("/user/:userid")
+    .route("/user/:userid") 
     .get(async (req, res) => {
-      console.log("ttttttttttttttttttttttttttttttttttttttttt");
       try {
         const user = await users.get(req.params.userid);
         if (!user) res.sendStatus(404);
