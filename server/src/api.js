@@ -15,7 +15,7 @@ function init(db) {
     console.log("API: method %s, path %s", req.method, req.path);
     console.log("Params", req.params);
     console.log("Body", req.body);
-    console.log('Session',req.session);
+    console.log("Session", req.session);
 
     next();
   });
@@ -34,8 +34,8 @@ function init(db) {
         return;
       }
 
-      let user_e = email && await users.exists_email(email);
-      let user_l = login && await users.exists_login(login);
+      let user_e = email && (await users.exists_email(email));
+      let user_l = login && (await users.exists_login(login));
       let user = user_e ? user_e : user_l;
 
       if (!user) {
@@ -58,8 +58,8 @@ function init(db) {
           } else {
             // C'est bon, nouvelle session créée
             req.session.userid = user._id;
-            console.log("Logout", req.session);
-            console.log("User connecté",user);
+            console.log("Session", req.session);
+            console.log("User connecté", user);
             res.status(200).json({
               status: 200,
               message: "Login et mot de passe accepté",
@@ -84,11 +84,9 @@ function init(db) {
       });
     }
   });
-  
+
   router.delete("/user/:userid/logout", (req, res) => {
-
-    if(req.params.userid!=res.session.userid) {
-
+    if (req.params.userid != req.session.userid) {
       res.status(401).json({
         status: 401,
         message: "Utilisateur non connecté",
@@ -96,7 +94,6 @@ function init(db) {
       return;
     }
 
-    // console.log("Params",req.params,"\nSession",req.session);
     req.session.destroy((err) => {
       if (err) {
         res.status(401).send("Erreur de deconnexion");
@@ -104,15 +101,16 @@ function init(db) {
         res.status(200).send("fermeture session");
       }
     });
+
+    console.log("\nFermeture session",req.session);
   });
 
   // permutation avec la suivante entraine une erreur
-  router.get("/user/infos", (req, res) => {
+  router.get("/user/infos", async (req, res) => {
     try {
-      users
-        .getAll()
-        .then((nb) => res.status(200).send(nb))
-        .catch((e) => res.status(402).send(e));
+      const nb = await users.getAll();
+      res.status(200).send(nb)
+
       return;
     } catch (e) {
       res.status(500).send(e);
@@ -120,10 +118,10 @@ function init(db) {
   });
 
   router
-    .route("/user/:user_id")
+    .route("/user/:userid")
     .get(async (req, res) => {
       try {
-        const user = await users.get(req.params.user_id);
+        const user = await users.get(req.params.userid);
         if (!user) res.sendStatus(404);
         else res.send(user);
       } catch (e) {
@@ -132,24 +130,37 @@ function init(db) {
     })
     .delete(async (req, res) => {
       try {
-        users
-          .remove(req.params.user_id)
-          .then((numRemoved) => {
-            if (numRemoved) {
-              res.send(`delete user ${req.params.user_id}`);
-            } else {
-              res.status(403).send(`userid non reconnu`);
-            }
-          })
-          .catch((err) => res.status(500).send(err));
+        if (req.params.userid != req.session.userid) {
+          res.status(401).json({
+            status: 401,
+            message: "Utilisateur non connecté",
+          });
+          return;
+        }
+    
+        const numRemoved = await users.remove(req.params.user_id);
+        if (numRemoved) {
+          res.status(201).send(`delete user ${req.params.user_id}`);
+        } else {
+          res.status(403).send(`userid non reconnu`);
+        }
+        return;
       } catch (e) {
         res.status(500).send(e);
       }
     });
 
   router.post("/user", async (req, res) => {
-    const { email, login, password, confirmpassword, lastname, firstname } = req.body;
-    if (!email || !login || !password || !confirmpassword || !lastname || !firstname) {
+    const { email, login, password, confirmpassword, lastname, firstname } =
+      req.body;
+    if (
+      !email ||
+      !login ||
+      !password ||
+      !confirmpassword ||
+      !lastname ||
+      !firstname
+    ) {
       res.status(400).send("Missing fields");
       return;
     }
@@ -185,16 +196,15 @@ function init(db) {
     upload.single("file"),
     async (req, res) => {
       try {
-        
-        if(req.params.userid!=req.session.userid) {
+        if (req.params.userid != req.session.userid) {
           res.status(401).json({
             status: 401,
             message: "Utilisateur non connecté",
           });
           return;
         }
-        
-        user = await users.exists_id(req.params.userid)
+    
+        const user = await users.exists_id(req.params.userid);
         if (!user) {
           res.status(401).json({
             status: 401,
@@ -222,15 +232,12 @@ function init(db) {
           });
           return;
         }
-        // const fileN = `${__dirname}/../data/uploads/profil/${fileName}`
-        // console.log("FilName",fileN,"\n\n");
-        
-        
+
         const fileName = user.login + ".jpg";
         if (!(await users.upload_profil(req.params.userid, fileName))) {
           res.status(401).json({
             status: 401,
-            message: "Utilisateur inconnu",
+            message: "Upload profil",
           });
           return;
         }
@@ -255,54 +262,50 @@ function init(db) {
     }
   );
 
-  router.patch(
-    "/user/:userid/bio",
-    async (req, res) => {
-      try {
-
-        const {bio} = req.body;
-        if (!bio) {
-          res.status(400).send("Missing fields");
-          return;
-        }
-        
-        // if(req.params.userid!=req.session.userid) {
-        //   res.status(401).json({
-        //     status: 401,
-        //     message: "Utilisateur non connecté",
-        //   });
-        //   return;
-        // }
-        
-        user = await users.exists_id(req.params.userid)
-        if (!user) {
-          res.status(401).json({
-            status: 401,
-            message: "Userid inconnu",
-          });
-          return;
-        }
-
-        if (!(await users.set_bio(req.params.userid, bio))) {
-          res.status(401).json({
-            status: 401,
-            message: "Erreur de set bio",
-          });
-          return;
-        }
-
-        res.status(201).json({ message: "bio changé" });
+  router.patch("/user/:userid/bio", async (req, res) => {
+    try {
+      const { bio } = req.body;
+      if (!bio) {
+        res.status(400).send("Missing fields");
         return;
-      } catch (e) {
-        // Toute autre erreur
-        res.status(500).json({
-          status: 500,
-          message: "erreur interne",
-          details: (e || "Erreur inconnue").toString(),
-        });
       }
+
+      if (req.params.userid != req.session.userid) {
+        res.status(401).json({
+          status: 401,
+          message: "Utilisateur non connecté",
+        });
+        return;
+      }
+  
+      const user = await users.exists_id(req.params.userid);
+      if (!user) {
+        res.status(401).json({
+          status: 401,
+          message: "Userid inconnu",
+        });
+        return;
+      }
+
+      if (!(await users.set_bio(req.params.userid, bio))) {
+        res.status(401).json({
+          status: 401,
+          message: "Erreur de set bio",
+        });
+        return;
+      }
+
+      res.status(201).json({ message: "bio changé" });
+      return;
+    } catch (e) {
+      // Toute autre erreur
+      res.status(500).json({
+        status: 500,
+        message: "erreur interne",
+        details: (e || "Erreur inconnue").toString(),
+      });
     }
-  );
+  });
 
   return router;
 }

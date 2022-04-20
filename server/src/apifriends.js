@@ -11,20 +11,37 @@ function initF(db) {
     console.log("API: method %s, path %s", req.method, req.path);
     console.log("Params", req.params);
     console.log("Body", req.body);
-    console.log('Session',req.session);
+    console.log("Session", req.session);
 
     next();
   });
-  
+
   const users = new Users.default(db);
 
   router
-    .route("/user/:user_id/friends")
-    .get((req, res) => {
-      users
-        .getFriends(req.params.user_id)
-        .then((friends) => res.status(200).json({friends}))
-        .catch((e) => res.status(500).send(err));
+    .route("/user/:userid/friends")
+    .get(async (req, res) => {
+      try {
+        if (req.params.userid != req.session.userid) {
+          res.status(401).json({
+            status: 401,
+            message: "Utilisateur non connecté",
+          });
+          return;
+        }
+
+        const friends = await users.getFriends(req.params.userid);
+        res.status(200).json({ friends });
+
+        return;
+      } catch (e) {
+        // Toute autre erreur
+        res.status(500).json({
+          status: 500,
+          message: "erreur interne",
+          details: (e || "Erreur inconnue").toString(),
+        });
+      }
     })
     .post(async (req, res) => {
       try {
@@ -39,7 +56,6 @@ function initF(db) {
         }
 
         user_l = await users.exists(login);
-        // console.log("User_l",user_l);
         if (!user_l) {
           res.status(401).json({
             status: 401,
@@ -48,8 +64,15 @@ function initF(db) {
           return;
         }
 
-        user_d = await users.existsID(req.params.user_id);
-        // console.log("User_d",user_d);
+        if (user_l._id != req.session.userid) {
+          res.status(401).json({
+            status: 401,
+            message: "Utilisateur non connecté",
+          });
+          return;
+        }
+
+        user_d = await users.existsID(req.params.userid);
         if (!user_d) {
           res.status(401).json({
             status: 401,
@@ -74,20 +97,23 @@ function initF(db) {
           return;
         }
 
-        users
-          .addFriend(user_l._id,user_d._id)
-          .then((id) => res.status(200).json({id:id}))
-          .catch((e) => res.status(500).send(e));
-      } catch(e) {
-        res.status(500).send(e);
+        const id = await users.addFriend(user_l._id, user_d._id);
+        res.status(200).json({ id: id });
+
+        return;
+      } catch (e) {
+        // Toute autre erreur
+        res.status(500).json({
+          status: 500,
+          message: "erreur interne",
+          details: (e || "Erreur inconnue").toString(),
+        });
       }
     });
 
-  router.get('/user/:userid/friends/:userid2', async (req, res) => {
+  router.get("/user/:userid/friends/:userid2", async (req, res) => {
     try {
-
-      user_l = await users.existsID(req.params.userid);
-      // console.log("User_l",user_l);
+      const user_l = await users.existsID(req.params.userid);
       if (!user_l) {
         res.status(401).json({
           status: 401,
@@ -96,8 +122,7 @@ function initF(db) {
         return;
       }
 
-      user_d = await users.existsID(req.params.userid2);
-      // console.log("User_d",user_d);
+      const user_d = await users.existsID(req.params.userid2);
       if (!user_d) {
         res.status(401).json({
           status: 401,
@@ -113,22 +138,34 @@ function initF(db) {
         });
         return;
       }
-      
-      friends =user_l.followings.filter(value => user_d.followings.includes(value));
-      // console.log("Friends",friends);
 
-      res.status(401).json({"id_friends":friends});
+      friends = user_l.followings.filter((value) =>
+        user_d.followings.includes(value)
+      );
+
+      res.status(401).json({ id_friends: friends });
       return;
-    } catch(e) {
-      res.status(500).send(e);
+    } catch (e) {
+      // Toute autre erreur
+      res.status(500).json({
+        status: 500,
+        message: "erreur interne",
+        details: (e || "Erreur inconnue").toString(),
+      });
     }
   });
 
-  router.delete('/user/:userid/friends/:friendid', async (req, res) => {
+  router.delete("/user/:userid/friends/:friendid", async (req, res) => {
     try {
+      if (req.params.userid != req.session.userid) {
+        res.status(401).json({
+          status: 401,
+          message: "Utilisateur non connecté",
+        });
+        return;
+      }
 
-      user_l = await users.existsID(req.params.userid);
-      // console.log("User_l",user_l);
+      const user_l = await users.existsID(req.params.userid);
       if (!user_l) {
         res.status(401).json({
           status: 401,
@@ -137,8 +174,7 @@ function initF(db) {
         return;
       }
 
-      user_d = await users.existsID(req.params.friendid);
-      // console.log("User_d",user_d);
+      const user_d = await users.existsID(req.params.friendid);
       if (!user_d) {
         res.status(401).json({
           status: 401,
@@ -154,8 +190,8 @@ function initF(db) {
         });
         return;
       }
-      
-      if (! user_l.followings.includes(user_d._id)) {
+
+      if (!user_l.followings.includes(user_d._id)) {
         res.status(401).json({
           status: 401,
           message: "userid ne suit pas friendid",
@@ -163,17 +199,21 @@ function initF(db) {
         return;
       }
 
-      console.log("suit bien");
-      users
-        .deleteFriend(user_l._id,user_d._id)
-        .then((id) => res.status(200).json({id:id}))
-        .catch((e) => res.status(500).send(e));
-    } catch(e) {
-      res.status(500).send(e);
+      users.deleteFriend(user_l._id, user_d._id);
+      res.status(200).json({ id: id });
+
+      return;
+    } catch (e) {
+      // Toute autre erreur
+      res.status(500).json({
+        status: 500,
+        message: "erreur interne",
+        details: (e || "Erreur inconnue").toString(),
+      });
     }
   });
 
-  router.get('/:userid/infos', (req, res) => {
+  router.get("/:userid/infos", (req, res) => {
     // c'est la meme chose que friendGetRelationship ou j'ai pas compris
   });
 
