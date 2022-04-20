@@ -2,8 +2,8 @@ var Datastore = require('nedb');
 
 db = {} 
 
-db.users = new Datastore('../../data/birdyUsersdb.mongodb')
-db.messages = new Datastore('../../data/birdyMessagesdb.mongodb')
+db.users = new Datastore('./data/databases/birdyUsersdb.mongodb')
+db.messages = new Datastore('./data/databases/birdyMessagesdb.mongodb')
 
 db.users.loadDatabase(function (err) {    // Callback is optional
   if(err)

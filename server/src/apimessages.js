@@ -589,10 +589,10 @@ function init(db_users, db_messages) {
         }
 
         const fileName = message._id + ".jpg";
-        if (!(await messages.upload_picture(req.params.userid, fileName))) {
+        if (!(await messages.upload_picture(req.params.messageid, fileName))) {
           res.status(401).json({
             status: 401,
-            message: "Upload picture",
+            message: "Upload picture error",
           });
           return;
         }
