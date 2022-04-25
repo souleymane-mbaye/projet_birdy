@@ -10,23 +10,32 @@ export default function Feed({ id }) {
   const { user } = useContext(AuthContext);
   useEffect(() => {
     const fetchPosts = async () => {
-      const res = id
-      //ICI
-        ? await axios.get("/apimessages/user/"+id+"/infos")
-        : await axios.get("/apimessages/messages");
-      
-      setPosts(
-        res.data.messages.sort((p1, p2) => {
-          return new Date(p2.date) - new Date(p1.date);
-        })
-      );
+      const res =await axios.get("/apimessages/messages");
+
+      const message=[]
+      if(id){
+        for(let mes of res.data.messages){
+          if(mes.author_id==id){
+            message.push(mes)
+          }
+        }
+      }else{
+        for(let mes of res.data.messages){
+            message.push(mes)
+          }
+      }
+      setPosts(        
+          message.sort((p1, p2) => {
+           return new Date(p2.date) - new Date(p1.date);
+         }) 
+       );
     };
     fetchPosts();
   }, [id, user._id]);
   return (
     <div className="feed">
       <div className="feedWrapper">
-        {(id === user.user._id)? <></>  : <Share/>}
+        {(id)? <></>  : <Share/>}
         {posts.map((p) => (
           <Post key={p._id} post={p} />
         ))}

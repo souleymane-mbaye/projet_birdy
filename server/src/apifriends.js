@@ -54,8 +54,8 @@ function initF(db) {
           });
           return;
         }
-
-        user_l = await users.exists(login);
+        //MODIFIER AVANT EXISTS
+        user_l = await users.exists_login(login);
         if (!user_l) {
           res.status(401).json({
             status: 401,
@@ -63,7 +63,6 @@ function initF(db) {
           });
           return;
         }
-
         if (user_l._id != req.session.userid) {
           res.status(401).json({
             status: 401,
@@ -71,8 +70,8 @@ function initF(db) {
           });
           return;
         }
-
-        user_d = await users.existsID(req.params.userid);
+        //MODIFIER AVANT EXISTID
+        user_d = await users.exists_id(req.params.userid);
         if (!user_d) {
           res.status(401).json({
             status: 401,
@@ -80,7 +79,6 @@ function initF(db) {
           });
           return;
         }
-
         if (user_l._id == user_d._id) {
           res.status(401).json({
             status: 401,
@@ -88,7 +86,6 @@ function initF(db) {
           });
           return;
         }
-
         if (user_l.followings.includes(user_d._id)) {
           res.status(401).json({
             status: 401,
@@ -96,10 +93,8 @@ function initF(db) {
           });
           return;
         }
-
         const id = await users.addFriend(user_l._id, user_d._id);
         res.status(200).json({ id: id });
-
         return;
       } catch (e) {
         // Toute autre erreur
@@ -157,53 +152,66 @@ function initF(db) {
 
   router.delete("/user/:userid/friends/:friendid", async (req, res) => {
     try {
+      console.log("test1");
+      console.log("req.params.userid != req.session.userid",req.params.userid," ,kkkk", req.session.userid);
       if (req.params.userid != req.session.userid) {
+        console.log("test2");
         res.status(401).json({
           status: 401,
           message: "Utilisateur non connecté",
         });
         return;
       }
+      console.log("test3");
 
-      const user_l = await users.existsID(req.params.userid);
+      const user_l = await users.exists_id(req.params.userid);
+      console.log("test4",user_l);
       if (!user_l) {
+        console.log("test5");
         res.status(401).json({
           status: 401,
           message: "Utilisateur de userid inconnu",
         });
         return;
       }
-
-      const user_d = await users.existsID(req.params.friendid);
+      console.log("test6");
+      const user_d = await users.exists_id(req.params.friendid);
+      console.log("test7",user_d);
       if (!user_d) {
+        console.log("test8");
         res.status(401).json({
           status: 401,
           message: "Friendid inconnu",
         });
         return;
       }
-
+      console.log("test9 user_l._id == user_d._id",user_l._id,"hhhhh", user_d._id);
       if (user_l._id == user_d._id) {
+        console.log("test10");
         res.status(401).json({
           status: 401,
           message: "Même utilisateur",
         });
         return;
       }
+      console.log("test11");
 
       if (!user_l.followings.includes(user_d._id)) {
+        console.log("test12");
         res.status(401).json({
           status: 401,
           message: "userid ne suit pas friendid",
         });
         return;
       }
-
+      console.log("test13",user_l._id, user_d._id);
+      //AREVOIR
       users.deleteFriend(user_l._id, user_d._id);
       res.status(200).json({ id: id });
 
       return;
     } catch (e) {
+      console.log("test14");
       // Toute autre erreur
       res.status(500).json({
         status: 500,

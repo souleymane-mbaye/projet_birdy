@@ -14,8 +14,21 @@ import { Link } from "react-router-dom";
 
 export default function Profile() {
 
-  const { user } = useContext(AuthContext);
+  const [user, setUser] = useState({});
+  const id = useParams().id;
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      //en utilisant la list de post passe en parametre contenant les userId en recupere les differents nom d'utilisateur ayant publier les post
+      try{
+        const res = await axios.get("/api/user/"+id);
+        setUser(res.data);
+      }catch(e){
+        console.log(e)
+      }     
+    };
+    fetchUser();
+  }, [id]);
   return (
     <>
       <Topbar />
@@ -27,35 +40,32 @@ export default function Profile() {
               <img
                 className="profileCoverImg"
                 src={
-                  user.user.coverPicture
-                    ? user.user.coverPicture
-                    : cover
+                 cover
                 }
                 alt=""
               />
               <img
                 className="profileUserImg"
                 src={
-                  user.user.profile
-                    ?  user.user.profile
+                  user.profile
+                    ?  user.profile
                     : pic
                 }
                 alt=""
               />
             </div>
             <div className="profileInfo">
-              <h4 className="profileInfoName">{user.user.login}</h4>
-              <span className="profileInfoDesc">{user.user.bio}</span>
+              <h4 className="profileInfoName">{user.login}</h4>
             </div>
           </div>
           <div className="profileRightBottom">
             
-            <Feed id={user.user._id} />
+            <Feed id={user._id} />
            
             <Rightbar users={user}/>
           </div>
         </div>
-      </div>
+      </div> 
     </>
   );
 }

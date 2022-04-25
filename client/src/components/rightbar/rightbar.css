@@ -45,14 +45,28 @@
 }
 .rightbarUpdateButton
 {
-  margin-top: 30px;
-  margin-bottom: 10px;
+  margin-top: 10px;
   border: none;
-  background-color: #18f2bb;
-  color: rgb(7, 0, 0);
+  background-color: #418f69;
+  color: white;
   border-radius: 5px;
   padding: 5px 10px;
-  display: flex;
+  margin-left: 5px;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer; 
+}
+.rightbarFollowButton2
+{
+  
+  border: none;
+  background-color: #3a649f;
+  color: white;
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin-left: 5px;
   align-items: center;
   font-size: 16px;
   font-weight: 500;
@@ -101,7 +115,7 @@
   margin-top: 30px;
   margin-bottom: 10px;
   border: none;
-  background-color: #1872f2;
+  background-color: #3a649f;
   color: white;
   border-radius: 5px;
   padding: 5px 10px;

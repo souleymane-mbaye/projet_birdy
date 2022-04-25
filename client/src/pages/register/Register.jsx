@@ -23,7 +23,7 @@ export default function Register() {
       inserer il faudra cree une variable user qui possedera les attributs cree  */
       const user = {
         login: username.current.value,
-        // email: email.current.value,
+        email: email.current.value,
         password: password.current.value,
         confirmpassword: passwordAgain.current.value,
         lastname: lastname.current.value, 

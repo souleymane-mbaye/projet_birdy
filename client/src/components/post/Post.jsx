@@ -30,9 +30,9 @@ export default function Post({ post }) {
   useEffect(() => {
     const fetchUser = async () => {
       //en utilisant la list de post passe en parametre contenant les userId en recupere les differents nom d'utilisateur ayant publier les post
-      const res = await axios.get("api/user/"+post.author_id);
+      const res = await axios.get("/api/user/"+post.author_id);
       setUser(res.data);
-      console.log("user   ",user)
+      
     };
     fetchUser();
   }, [post.userId]);
@@ -55,6 +55,8 @@ export default function Post({ post }) {
     setLike(isLiked ? like - 1 : like + 1);
     setIsLiked(!isLiked);
   };
+  console.log("photo path",`${PF}`+post?.picture);
+
   return (
     <div className="post">
       <div className="postWrapper">
@@ -73,7 +75,10 @@ export default function Post({ post }) {
                 alt=""
               />
             </Link>
-            <span className="postUsername">{user.login}</span>
+            <Link to={`/profile/${user._id}`} style={{ textDecoration: "none", color: "black"}}>
+              <span className="postUsername">{user.login}</span>
+                
+            </Link>
             {/*    //nous avons utiliser la libraire timeago.js qui permet de calculer depuis quand le post a ete poster a partire de la createdAt presente dans la database*/}
             <span className="postDate">{format(post.date)}</span>
           </div>
@@ -84,7 +89,7 @@ export default function Post({ post }) {
         <div className="postCenter">
           <span className="postText">{post?.text}</span>
           {/*           //recuperation de l'image poste par le user*/}          
-          <img className="postImg" src={post?.picture} alt="" />
+          <img className="postImg" src={`${PF}${post?.picture}`} alt="" />
         </div>
         <div className="postBottom">
           <div className="postBottomLeft">
@@ -95,10 +100,10 @@ export default function Post({ post }) {
               alt=""
               htmlColor="blue"
             />
-            <span className="postLikeCounter">{like} people like it</span>
+            <span className="postLikeCounter">{like} like</span>
           </div>
           <div className="postBottomRight">
-            <span className="postCommentText">{post.comment} comments</span>
+            <span className="postCommentText">{post.comment} commentaires</span>
           </div>
         </div>
       </div>
