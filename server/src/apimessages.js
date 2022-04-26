@@ -87,13 +87,13 @@ function init(db_users, db_messages) {
     })
     .delete(async (req, res) => {
       try {
-        if (req.params.userid != req.session.userid) {
-          res.status(401).json({
-            status: 401,
-            message: "Utilisateur non connecté",
-          });
-          return;
-        }
+        // if (req.params.userid != req.session.userid) {
+        //   res.status(401).json({
+        //     status: 401,
+        //     message: "Utilisateur non connecté",
+        //   });
+        //   return;
+        // }
 
         const { message_id } = req.body;
         // Erreur sur la requête HTTP
