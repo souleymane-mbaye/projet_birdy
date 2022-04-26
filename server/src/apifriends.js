@@ -191,12 +191,7 @@ function initF(db) {
         });
         return;
       }
-<<<<<<< HEAD
-
-      const id = users.deleteFriend(user_l._id, user_d._id);
-=======
       const id=users.deleteFriend(user_l._id, user_d._id);
->>>>>>> 20e76510b0a9f8f51c2da93155774d864368048d
       res.status(200).json({ id: id });
 
       return;
