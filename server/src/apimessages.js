@@ -315,6 +315,7 @@ function init(db_users, db_messages) {
       .catch((e) => res.status(401).send(e));
   });
 
+
   router.get("/infos", async (req, res) => {
     messages
       .getAll()

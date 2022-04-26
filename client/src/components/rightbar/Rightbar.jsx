@@ -11,26 +11,40 @@ export default function Rightbar({ users }) {
   const [friends, setFriends] = useState([]);
   const { user: currentUser, dispatch } = useContext(AuthContext);
   const [followed, setFollowed] = useState(
-    currentUser.user.followings.includes(users?.user._id)
+    currentUser.user.followings.includes(users?._id)
   );
+  const [usere, setUsere] = useState({});
+  //rajouter un useEFfect pour modifier le current user et le followed
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try{
+        const res = await axios.get("/api/user/"+currentUser.user._id);
+        setUsere(res.data);
+        setFollowed(res.data.followings.includes(users?._id))
+      }catch(e){
+        console.log("erreur",e)
+      }     
+    };
+    fetchUser();
+    
+  }, [currentUser]);
+
 
   const handleClick = async () => {
     try {
       if (followed) {
-        await axios.put(`/users/${users._id}/unfollow`, {
-          userId: currentUser._id,
-        });
-        dispatch({ type: "UNFOLLOW", payload: users._id });
+        await axios.delete("/apifriends/user/"+currentUser.user._id+"/friends/"+users._id);
       } else {
-        await axios.put(`/users/${users._id}/follow`, {
-          userId: currentUser._id,
+        await axios.post("/apifriends/user/"+users._id+"/friends", {
+          login: currentUser.user.login,
         });
-        dispatch({ type: "FOLLOW", payload: users._id });
       }
       setFollowed(!followed);
     } catch (err) {
     }
   };
+
 
   const HomeRightbar = () => {
     return (
@@ -43,27 +57,54 @@ export default function Rightbar({ users }) {
   const ProfileRightbar = () => {
     return (
       <>
-        {users.username !== currentUser.username && (
+        {users._id !== currentUser.user._id && (
           <button className="rightbarFollowButton" onClick={handleClick}>
             {followed ? "Unfollow" : "Follow"}
             {followed ? <Remove /> : <Add />}
           </button>
         )}
-        <h4 className="rightbarTitle">User information</h4>
+        <h4 className="rightbarTitle">Information:</h4>
         <div className="rightbarInfo">
           <div className="rightbarInfoItem">
             <span className="rightbarInfoKey">Nom:</span>
-            <span className="rightbarInfoValue">{users.user.lastname}</span>
+            <span className="rightbarInfoValue">{users.lastname}</span>
           </div>
           <div className="rightbarInfoItem">
             <span className="rightbarInfoKey">Prenom:</span>
-            <span className="rightbarInfoValue">{users.user.firstname}</span>
+            <span className="rightbarInfoValue">{users.firstname}</span>
+          </div>
+          <div className="rightbarInfoItem">
+            <span className="rightbarInfoKey">Bio:</span>
+            <span className="rightbarInfoValue">{users.bio? users.bio : "vide"}</span>
           </div>
           
-        </div>
-        <Link to={`/update/${users.user._id}`} style={{ textDecoration: "none", color: "white"}}> 
+          {/* <div className="rightbarInfoItem">
+            <Link to={`/followings/${users._id}`}  style={{ textDecoration: "none"}}>
+              <span className="rightbarInfoKey">Followings:</span>
+              <span className="rightbarInfoValue">{users.followings.length}</span>
+            </Link>
+          </div> */}
+          <div className="rightbarInfoItem">
+            <span className="rightbarInfoKey">Email:</span>
+            <span className="rightbarInfoValue">{users.email}</span>
+          </div>
+          <span>
+            <span className="rightbarInfoItem">
+              <Link to={`/followers/${users._id}`}  style={{ textDecoration: "none"}}>
+                <button className="rightbarFollowButton2" > Followers</button>
+              </Link>
+              <Link to={`/followings/${users._id}`}  style={{ textDecoration: "none"}}>
+                <button className="rightbarFollowButton2" > Followings</button>
+              </Link>
+            </span>
+            <div className="rightbarInfoItem">
+              <Link to={`/update/${users._id}`} style={{ textDecoration: "none", color: "white"}}> 
                 <button className="rightbarUpdateButton" > Update</button>
-        </Link> 
+              </Link> 
+            </div>
+          </span>
+        </div>
+        
       </>
     );
   };

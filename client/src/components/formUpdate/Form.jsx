@@ -16,6 +16,7 @@ export default function Form() {
     const bio = useRef();
     const password = useRef();
     const passwordAgain = useRef();
+    const [text, setText] = useState("");
 
 
     const submitHandler = async (e) => {
@@ -88,7 +89,7 @@ export default function Form() {
                 <span className="focus-input100"></span>      
               </div>
 
-              <div className="wrap-input100 validate-input" data-validate = "Saisir un mot de passe">
+              {/* <div className="wrap-input100 validate-input" data-validate = "Saisir un mot de passe">
                 <input className="input100" type="password" required ref={password} name="pass" placeholder="Mot de passe"/>
                 <span className="focus-input100"></span>
                 
@@ -98,9 +99,9 @@ export default function Form() {
                 <input className="input100" type="password" required ref={passwordAgain} name="pass" placeholder="Confirmer le mot de passe"/>
                 <span className="focus-input100"></span>
                 
-              </div>
+              </div> */}
               <div>
-                <p></p>
+                <p>{text}</p>
               </div>
               
               <div className="container-login100-form-btn">

@@ -121,9 +121,12 @@ function init(db) {
     .route("/user/:userid") 
     .get(async (req, res) => {
       try {
+        // ne recupere pas le user
         const user = await users.get(req.params.userid);
-        if (!user) res.sendStatus(404);
-        else res.send(user);
+        if (!user) 
+          res.sendStatus(404);
+        else 
+          res.send(user);
       } catch (e) {
         res.status(500).send(e);
       }

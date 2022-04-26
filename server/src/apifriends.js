@@ -22,13 +22,13 @@ function initF(db) {
     .route("/user/:userid/friends")
     .get(async (req, res) => {
       try {
-        if (req.params.userid != req.session.userid) {
+        /* if (req.params.userid != req.session.userid) {
           res.status(401).json({
             status: 401,
             message: "Utilisateur non connecté",
           });
           return;
-        }
+        } */
 
         const friends = await users.getFriends(req.params.userid);
         res.status(200).json({ friends });
@@ -54,8 +54,8 @@ function initF(db) {
           });
           return;
         }
-
-        user_l = await users.exists(login);
+        //MODIFIER AVANT EXISTS
+        user_l = await users.exists_login(login);
         if (!user_l) {
           res.status(401).json({
             status: 401,
@@ -63,7 +63,6 @@ function initF(db) {
           });
           return;
         }
-
         if (user_l._id != req.session.userid) {
           res.status(401).json({
             status: 401,
@@ -71,8 +70,8 @@ function initF(db) {
           });
           return;
         }
-
-        user_d = await users.existsID(req.params.userid);
+        //MODIFIER AVANT EXISTID
+        user_d = await users.exists_id(req.params.userid);
         if (!user_d) {
           res.status(401).json({
             status: 401,
@@ -80,7 +79,6 @@ function initF(db) {
           });
           return;
         }
-
         if (user_l._id == user_d._id) {
           res.status(401).json({
             status: 401,
@@ -88,7 +86,6 @@ function initF(db) {
           });
           return;
         }
-
         if (user_l.followings.includes(user_d._id)) {
           res.status(401).json({
             status: 401,
@@ -96,10 +93,8 @@ function initF(db) {
           });
           return;
         }
-
         const id = await users.addFriend(user_l._id, user_d._id);
         res.status(200).json({ id: id });
-
         return;
       } catch (e) {
         // Toute autre erreur
@@ -165,7 +160,7 @@ function initF(db) {
         return;
       }
 
-      const user_l = await users.existsID(req.params.userid);
+      const user_l = await users.exists_id(req.params.userid);
       if (!user_l) {
         res.status(401).json({
           status: 401,
@@ -173,8 +168,7 @@ function initF(db) {
         });
         return;
       }
-
-      const user_d = await users.existsID(req.params.friendid);
+      const user_d = await users.exists_id(req.params.friendid);
       if (!user_d) {
         res.status(401).json({
           status: 401,
@@ -182,7 +176,6 @@ function initF(db) {
         });
         return;
       }
-
       if (user_l._id == user_d._id) {
         res.status(401).json({
           status: 401,
@@ -198,8 +191,12 @@ function initF(db) {
         });
         return;
       }
+<<<<<<< HEAD
 
       const id = users.deleteFriend(user_l._id, user_d._id);
+=======
+      const id=users.deleteFriend(user_l._id, user_d._id);
+>>>>>>> 20e76510b0a9f8f51c2da93155774d864368048d
       res.status(200).json({ id: id });
 
       return;

@@ -9,7 +9,6 @@ import logo from "../../assets/birdyRBG.png";
 
 export default function Topbar() {
   const { user } = useContext(AuthContext);
-  console.log("test test ",user)
   return (
     <div className="topbarContainer">
       <div className="topbarLeft">
