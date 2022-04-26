@@ -90,7 +90,7 @@ export default function Post({ post }) {
           <span className="postText">{post?.text}</span>
           {/*           //recuperation de l'image poste par le user*/}          
           {
-            post.picture!="" ? <img className="postImg" src={process.env.REACT_APP_PUBLIC_FOLDER+post.picture} />: <></>
+            post.picture!="" ? <img className="postImg" src={post.picture} />: <></>
           }
 
         </div>
