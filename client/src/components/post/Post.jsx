@@ -39,7 +39,7 @@ export default function Post({ post }) {
 
   const likeHandler = () => {
     try {
-      console.log("currente",post)
+      
       const idPost={
         message_id:post._id
       };
@@ -88,7 +88,8 @@ export default function Post({ post }) {
         </div>
         <div className="postCenter">
           <span className="postText">{post?.text}</span>
-          {/*           //recuperation de l'image poste par le user*/}          
+          {/*           //recuperation de l'image poste par le user*/} 
+          {console.log("currente",post)}         
           {
             post.picture!="" ? <img className="postImg" src={post.picture} />: <></>
           }

@@ -32,7 +32,7 @@ export default function Share() {
         data.append("name", fileName);
         data.append("file", file);
         newPost.img = fileName;
-        console.log(newPost);
+        console.log("new post",newPost);
         
         await axios.patch("/apimessages/user/"+user.user._id+"/messages/"+res.data.id+"/upload-picture", data);
         
