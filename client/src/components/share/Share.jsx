@@ -24,8 +24,9 @@ export default function Share() {
     };
     try {
       //ICI
-      const res=await axios.post("apimessages/user/"+user.user._id+"/messages", newPost);
-      window.location.reload();
+      const res=await axios.post("/apimessages/user/"+user.user._id+"/messages", newPost);
+      console.log("new post test",);
+      
       if (file) {
         const data = new FormData();
         const fileName = Date.now() + file.name;
@@ -33,10 +34,12 @@ export default function Share() {
         data.append("file", file);
         newPost.img = fileName;
         console.log("new post",newPost);
-        
-        await axios.patch("/apimessages/user/"+user.user._id+"/messages/"+res.data.id+"/upload-picture", data);
-        
+         
+        await axios.post("/apimessages/user/"+user.user._id+"/messages/"+res.data.id+"/upload-picture", data);
+        console.log("new post test",);
+
       }
+      window.location.reload();
     } catch (err) {
       console.log(err);
     }
