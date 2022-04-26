@@ -199,7 +199,7 @@ function initF(db) {
         return;
       }
 
-      users.deleteFriend(user_l._id, user_d._id);
+      const id = users.deleteFriend(user_l._id, user_d._id);
       res.status(200).json({ id: id });
 
       return;
