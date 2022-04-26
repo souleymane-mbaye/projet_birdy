@@ -601,7 +601,7 @@ function init(db_users, db_messages) {
         await pipeline(
           req.file.stream,
           fs.createWriteStream(
-            `${__dirname}/../data/uploads/posts/${fileName}`
+            `${__dirname}/../../client/public/data/uploads/posts/${fileName}`
           )
         );
 
