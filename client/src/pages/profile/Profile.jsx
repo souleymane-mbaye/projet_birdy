@@ -23,13 +23,14 @@ export default function Profile() {
       try{
         const res = await axios.get("/api/user/"+id);
         setUser(res.data);
+
       }catch(e){
         console.log(e)
       }     
     };
     fetchUser();
   }, [id]);
-  return (
+  return user._id!=undefined? (
     <>
       <Topbar />
       <div className="profile">
@@ -59,13 +60,12 @@ export default function Profile() {
             </div>
           </div>
           <div className="profileRightBottom">
-            
             <Feed id={user._id} />
-           
+            
             <Rightbar users={user}/>
           </div>
         </div>
       </div> 
     </>
-  );
+  ):<></>;
 }

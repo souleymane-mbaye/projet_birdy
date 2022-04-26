@@ -1,4 +1,4 @@
-import "./follower.css"
+import "./following.css"
 import React from 'react'
 import Topbar from '../../components/topbar/Topbar'
 import CloseFriend from '../../components/closeFriend/CloseFriend'
@@ -13,7 +13,7 @@ import pic from "../../assets/person/noAvatar.png";
 import { color } from "@mui/system";
 
 
-export default function Follower() {
+export default function Following() {
     //A completer
     const [friends, setFriends] = useState([]);
     const { user: currentUser, dispatch } = useContext(AuthContext);
@@ -25,7 +25,7 @@ export default function Follower() {
       const getFriends = async () => {
         try {
           const friendList = await axios.get("/apifriends/user/"+id+"/friends/");
-          const liste=friendList.data.friends.followers;
+          const liste=friendList.data.friends.followings;
           const listFriend=[]
           for(const friend in liste){
             const res = await axios.get("/api/user/"+liste[friend]);
@@ -86,7 +86,7 @@ export default function Follower() {
         <div className="Container">
           <Sidebar/>
           <div className="friendsDisplay" >
-              <h2 className="titre">Aucun follower</h2>
+              <h2 className="titre">Aucun following</h2>
           </div> 
           <Rightbar/>
         </div>

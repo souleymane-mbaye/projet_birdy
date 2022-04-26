@@ -22,13 +22,13 @@ function initF(db) {
     .route("/user/:userid/friends")
     .get(async (req, res) => {
       try {
-        if (req.params.userid != req.session.userid) {
+        /* if (req.params.userid != req.session.userid) {
           res.status(401).json({
             status: 401,
             message: "Utilisateur non connecté",
           });
           return;
-        }
+        } */
 
         const friends = await users.getFriends(req.params.userid);
         res.status(200).json({ friends });
@@ -152,66 +152,50 @@ function initF(db) {
 
   router.delete("/user/:userid/friends/:friendid", async (req, res) => {
     try {
-      console.log("test1");
-      console.log("req.params.userid != req.session.userid",req.params.userid," ,kkkk", req.session.userid);
       if (req.params.userid != req.session.userid) {
-        console.log("test2");
         res.status(401).json({
           status: 401,
           message: "Utilisateur non connecté",
         });
         return;
       }
-      console.log("test3");
 
       const user_l = await users.exists_id(req.params.userid);
-      console.log("test4",user_l);
       if (!user_l) {
-        console.log("test5");
         res.status(401).json({
           status: 401,
           message: "Utilisateur de userid inconnu",
         });
         return;
       }
-      console.log("test6");
       const user_d = await users.exists_id(req.params.friendid);
-      console.log("test7",user_d);
       if (!user_d) {
-        console.log("test8");
         res.status(401).json({
           status: 401,
           message: "Friendid inconnu",
         });
         return;
       }
-      console.log("test9 user_l._id == user_d._id",user_l._id,"hhhhh", user_d._id);
       if (user_l._id == user_d._id) {
-        console.log("test10");
         res.status(401).json({
           status: 401,
           message: "Même utilisateur",
         });
         return;
       }
-      console.log("test11");
 
       if (!user_l.followings.includes(user_d._id)) {
-        console.log("test12");
         res.status(401).json({
           status: 401,
           message: "userid ne suit pas friendid",
         });
         return;
       }
-      console.log("test13",user_l._id, user_d._id);
-      //AREVOIR
-      users.deleteFriend(user_l._id, user_d._id);
+      const id=users.deleteFriend(user_l._id, user_d._id);
       res.status(200).json({ id: id });
 
       return;
     } catch (e) {
-      console.log("test14");
       // Toute autre erreur
       res.status(500).json({
         status: 500,

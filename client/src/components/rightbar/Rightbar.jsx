@@ -13,17 +13,32 @@ export default function Rightbar({ users }) {
   const [followed, setFollowed] = useState(
     currentUser.user.followings.includes(users?._id)
   );
+  const [usere, setUsere] = useState({});
+  //rajouter un useEFfect pour modifier le current user et le followed
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try{
+        const res = await axios.get("/api/user/"+currentUser.user._id);
+        setUsere(res.data);
+        setFollowed(res.data.followings.includes(users?._id))
+      }catch(e){
+        console.log("erreur",e)
+      }     
+    };
+    fetchUser();
+    
+  }, [currentUser]);
+
 
   const handleClick = async () => {
     try {
-      if (!followed) {
+      if (followed) {
         await axios.delete("/apifriends/user/"+currentUser.user._id+"/friends/"+users._id);
-        
       } else {
         await axios.post("/apifriends/user/"+users._id+"/friends", {
           login: currentUser.user.login,
         });
-        
       }
       setFollowed(!followed);
     } catch (err) {
@@ -78,7 +93,7 @@ export default function Rightbar({ users }) {
               <Link to={`/followers/${users._id}`}  style={{ textDecoration: "none"}}>
                 <button className="rightbarFollowButton2" > Followers</button>
               </Link>
-              <Link to={`/followers/${users._id}`}  style={{ textDecoration: "none"}}>
+              <Link to={`/followings/${users._id}`}  style={{ textDecoration: "none"}}>
                 <button className="rightbarFollowButton2" > Followings</button>
               </Link>
             </span>
