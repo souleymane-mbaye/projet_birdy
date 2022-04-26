@@ -21,11 +21,8 @@ export default function Form() {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        const update = {
-          userId: user.user._id,
-          bio: bio.current.value,
-        };
-        if (file) {
+        
+       /*  if (file) {
           const data = new FormData();
           const fileName = Date.now() + file.name;
           data.append("name", fileName);
@@ -35,10 +32,31 @@ export default function Form() {
           try {
             await axios.post("/upload", data);
           } catch (err) {}
-        }
+        } */
         try {
+          
           //a revoir
-          await axios.put(`/user/${user.user._id}/messages`, update);
+          if(email.current.value!=""){
+            //requette changer email
+          }
+          if(login.current.value!=""){
+            //requette changer email
+          }
+          if(prenom.current.value!=""){
+            //requette changer email
+          }
+          if(nom.current.value!=""){
+            //requette changer email
+          }
+          if(bio.current.value!=""){
+            const bioval=
+            {bio: bio.current.value,
+            };
+            await axios.patch("/api/user/"+ user.user._id+"/bio",bioval);
+          }
+          /* if(password.current.value!="" && password===passwordAgain){
+            //rquette
+          } */
           window.location.reload();
         } catch (err) {
           console.log("erreur");
@@ -88,13 +106,13 @@ export default function Form() {
                 <textarea className="input100" type="text" ref={bio}  name="bio" placeholder="bio"/>
                 <span className="focus-input100"></span>      
               </div>
-
-              {/* <div className="wrap-input100 validate-input" data-validate = "Saisir un mot de passe">
+             {/*  <div className="wrap-input100 validate-input" data-validate = "Saisir un mot de passe">
                 <input className="input100" type="password" required ref={password} name="pass" placeholder="Mot de passe"/>
                 <span className="focus-input100"></span>
                 
               </div>
              
+              
               <div className="wrap-input100 validate-input" required data-validate = "Saisir un mot de passe">
                 <input className="input100" type="password" required ref={passwordAgain} name="pass" placeholder="Confirmer le mot de passe"/>
                 <span className="focus-input100"></span>

@@ -97,11 +97,14 @@ export default function Rightbar({ users }) {
                 <button className="rightbarFollowButton2" > Followings</button>
               </Link>
             </span>
+            {users._id == currentUser.user._id && (
             <div className="rightbarInfoItem">
               <Link to={`/update/${users._id}`} style={{ textDecoration: "none", color: "white"}}> 
                 <button className="rightbarUpdateButton" > Update</button>
               </Link> 
             </div>
+             )}
+            
           </span>
         </div>
         

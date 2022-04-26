@@ -54,19 +54,19 @@ function init(db) {
             res.status(500).json({
               status: 500,
               message: "Erreur interne",
-            }); 
+            });
           } else {
             // C'est bon, nouvelle session créée
             req.session.userid = user._id;
             console.log("Session", req.session);
             console.log("User connecté", user);
-            res.status(200).json({user});
+            res.status(200).json({ user });
           }
         });
         return;
       }
       // Faux login : destruction de la session et erreur
-      req.session.destroy((err) => {});
+      req.session.destroy((err) => { });
       res.status(403).json({
         status: 403,
         message: "login et/ou le mot de passe invalide(s)",
@@ -100,10 +100,10 @@ function init(db) {
       }
     });
 
-    console.log("\nFermeture session",req.session);
+    console.log("\nFermeture session", req.session);
     return;
-  }); 
-  
+  });
+
 
   // permutation avec la suivante entraine une erreur
   router.get("/user/infos", async (req, res) => {
@@ -118,14 +118,14 @@ function init(db) {
   });
 
   router
-    .route("/user/:userid") 
+    .route("/user/:userid")
     .get(async (req, res) => {
       try {
         // ne recupere pas le user
         const user = await users.get(req.params.userid);
-        if (!user) 
+        if (!user)
           res.sendStatus(404);
-        else 
+        else
           res.send(user);
       } catch (e) {
         res.status(500).send(e);
@@ -140,13 +140,79 @@ function init(db) {
           });
           return;
         }
-    
+
         const numRemoved = await users.remove(req.params.user_id);
         if (numRemoved) {
           res.status(201).send(`delete user ${req.params.user_id}`);
         } else {
           res.status(403).send(`userid non reconnu`);
         }
+        return;
+      } catch (e) {
+        res.status(500).send(e);
+      }
+    })
+    .patch(async (req, res) => {
+      try {
+        if (req.params.userid != req.session.userid) {
+          res.status(401).json({
+            status: 401,
+            message: "Utilisateur non connecté",
+          });
+          return;
+        }
+
+        var { email, login, password, confirmpassword, lastname, firstname } = req.body;
+        if (
+          !email &&
+          !login &&
+          !lastname &&
+          !firstname &&
+          !bio
+        ) {
+          res.status(400).send("Missing fields, au moins un champ non vide");
+          return;
+        }
+
+        const user = await users.exists_id(req.params.userid);
+        if (!user) {
+          res.status(401).json({
+            status: 401,
+            message: "Userid inconnu",
+          });
+          return;
+        }
+
+        // si il ne veut modifier tous les champs
+        if(!login) 
+          login = user.login
+        if(!email)
+          email = user.email
+        if(!lastname)
+          lastname = user.lastname
+        if(!firstname)
+          firstname = user.firstname
+        if(!bio)
+          bio = user.bio
+        
+        if ( (user.login != login) && (await users.exists_login(login))) {
+          res.status(401).json({
+            status: 401,
+            message: "Login déjà pris",
+          });
+          return;
+        }
+        if ( (user.email != email) && (await users.exists_email(email))) {
+          res.status(401).json({
+            status: 401,
+            message: "Email déjà pris",
+          });
+          return;
+        }
+
+        const id = users.update(email, login, lastname, firstname, bio)
+        res.status(201).send({ id: id });
+
         return;
       } catch (e) {
         res.status(500).send(e);
@@ -173,7 +239,7 @@ function init(db) {
       return;
     }
 
-    if (await users.exists_login(email)) {
+    if (await users.exists_email(email)) {
       res.status(401).json({
         status: 401,
         message: "Email déjà pris",
@@ -206,7 +272,7 @@ function init(db) {
           });
           return;
         }
-    
+
         const user = await users.exists_id(req.params.userid);
         if (!user) {
           res.status(401).json({
@@ -248,7 +314,7 @@ function init(db) {
         await pipeline(
           req.file.stream,
           fs.createWriteStream(
-            `${__dirname}/../data/uploads/profil/${fileName}`
+            `${__dirname}/../../client/public/data/uploads/profile/${fileName}`
           )
         );
 
@@ -280,7 +346,7 @@ function init(db) {
         });
         return;
       }
-  
+
       const user = await users.exists_id(req.params.userid);
       if (!user) {
         res.status(401).json({
@@ -296,7 +362,7 @@ function init(db) {
           message: "Erreur de set bio",
         });
         return;
-      } 
+      }
 
       res.status(201).json({ message: "bio changé" });
       return;

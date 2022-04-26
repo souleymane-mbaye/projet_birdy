@@ -55,9 +55,9 @@ export default function Post({ post }) {
     setLike(isLiked ? like - 1 : like + 1);
     setIsLiked(!isLiked);
   };
-  console.log("photo path",`${PF}`+post?.picture);
+  console.log("photo path",post);
 
-  return (
+  return user!=undefined?(
     <div className="post">
       <div className="postWrapper">
         <div className="postTop">
@@ -89,13 +89,15 @@ export default function Post({ post }) {
         <div className="postCenter">
           <span className="postText">{post?.text}</span>
           {/*           //recuperation de l'image poste par le user*/}          
-          <img className="postImg" src={`${PF}${post?.picture}`} alt="" />
+          {
+            post.picture!="" ? <img className="postImg" src={process.env.REACT_APP_PUBLIC_FOLDER+post.picture} />: <></>
+          }
+
         </div>
         <div className="postBottom">
           <div className="postBottomLeft">
           <ThumbUp
               className="likeIcon"
-              src={`${PF}like.png`}
               onClick={likeHandler}
               alt=""
               htmlColor="blue"
@@ -108,5 +110,5 @@ export default function Post({ post }) {
         </div>
       </div>
     </div>
-  );
+  ):<></>;
 }
