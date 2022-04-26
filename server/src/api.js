@@ -300,7 +300,7 @@ function init(db) {
             message: "Max size",
           });
           return;
-        }
+        } 
 
         const fileName = user.login + ".jpg";
         if (!(await users.upload_profil(req.params.userid, fileName))) {
