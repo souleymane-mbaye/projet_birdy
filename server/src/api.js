@@ -133,17 +133,18 @@ function init(db) {
     })
     .delete(async (req, res) => {
       try {
-        if (req.params.userid != req.session.userid) {
-          res.status(401).json({
-            status: 401,
-            message: "Utilisateur non connecté",
-          });
-          return;
-        }
+        // if (req.params.userid != req.session.userid) {
+        // //   res.status(401).json({
+        // //     status: 401,
+        // //     message: "Utilisateur non connecté",
+        // //   });
+        // //   return;
+        // // }
+        console.log("ici");
 
-        const numRemoved = await users.remove(req.params.user_id);
+        const numRemoved = await users.remove(req.params.userid);
         if (numRemoved) {
-          res.status(201).send(`delete user ${req.params.user_id}`);
+          res.status(201).json({numRemoved});
         } else {
           res.status(403).send(`userid non reconnu`);
         }

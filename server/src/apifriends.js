@@ -63,7 +63,7 @@ function initF(db) {
           });
           return;
         }
-        if (user_l._id != req.session.userid) {
+        if (req.params._id != req.session.userid) {
           res.status(401).json({
             status: 401,
             message: "Utilisateur non connecté",
