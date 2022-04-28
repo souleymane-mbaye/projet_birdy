@@ -46,6 +46,8 @@ function init(db) {
         return;
       }
 
+      console.log("User ici",user);
+
       let checked = await users.check_login_password(user.login, password);
       if (checked) {
         // Avec middleware express-session
@@ -79,6 +81,7 @@ function init(db) {
         message: "erreur interne",
         details: (e || "Erreur inconnue").toString(),
       });
+      return;
     }
   });
 

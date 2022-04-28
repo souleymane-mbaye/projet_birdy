@@ -1,7 +1,1 @@
-<<<<<<< HEAD
-{"email":"souleymane@gmail.com","login":"souleymane__","password":"$2b$10$BWNj.JXexT8TG/ZAb5UsEueZziIIasFewvRA2HIfYI59eKDQuE3f.","lastname":"Mbaye","firstname":"Souleymane","followings":[],"followers":["WitCt92ufiBORKcw"],"profil":"souleymane__.jpg","bio":"","_id":"86UOa6ShgeljWOLS"}
-{"email":"zozo@gmail.com","login":"sss","password":"$2b$10$IulaMozw9Revo.Kvjm6RGuPAuNyIXlBJotjZyuPP713t0NlNDxYOe","lastname":"nom","firstname":"nom","followings":["86UOa6ShgeljWOLS"],"followers":[],"profil":"","bio":"ettte","_id":"WitCt92ufiBORKcw"}
-=======
-{"email":"souleymane@gmail.com","login":"souleymane__","password":"$2b$10$BWNj.JXexT8TG/ZAb5UsEueZziIIasFewvRA2HIfYI59eKDQuE3f.","lastname":"Mbaye","firstname":"Souleymane","followings":[],"followers":[],"profil":"","bio":"","_id":"86UOa6ShgeljWOLS"}
-{"email":"zozo@gmail.com","login":"sss","password":"$2b$10$IulaMozw9Revo.Kvjm6RGuPAuNyIXlBJotjZyuPP713t0NlNDxYOe","lastname":"nom","firstname":"nom","followings":[],"followers":[],"profil":"","bio":"","_id":"WitCt92ufiBORKcw"}
->>>>>>> parent of 20e7651 (presque)
+{"email":"souleymane@gmail.com","login":"souley","password":"$2b$10$S2euywpeVSNc79v7PbsDJerZOH1LN.P2SIvkWZIBwCkDoPuatq/au","lastname":"mbaye","firstname":"souley","followings":[],"followers":[],"profil":"","bio":"","_id":"y4zL8ZAZfRixkMaN"}
