@@ -9,8 +9,6 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router";
 import Sidebar from '../../components/sidebar/Sidebar';
 import Rightbar from '../../components/rightbar/Rightbar';
-import pic from "../../assets/person/noAvatar.png";
-import { color } from "@mui/system";
 
 
 export default function Follower() {
@@ -21,75 +19,51 @@ export default function Follower() {
     const [followed, setFollowed] = useState(
       currentUser.user.followers.includes(id)
     );
+    
     useEffect(() => {
       const getFriends = async () => {
         try {
           const friendList = await axios.get("/apifriends/user/"+id+"/friends/");
-          const liste=friendList.data.friends.followers;
-          const listFriend=[]
-          for(const friend in liste){
-            const res = await axios.get("/api/user/"+liste[friend]);
-            listFriend.push(res.data)
-          }
-          setFriends(listFriend)
+          setFriends(friendList.data.friends.followers);
         } catch (err) {
           console.log(err);
         }
       };
-      
       getFriends();
-   }, []);
+    }, []);
 
 
 
 
-  return friends.length!=0? (
-    
+  return (
     <div>
         <Topbar/>
         <div className="Container">
           <Sidebar/>
-          <div className="friendsDisplay">
-            <div >
+          <div >
+            <p>testttt</p>
+              <div className="rightbarFollowings">
               {friends.map((friend) => (
-                <div className="userCard">
-                  <Link to={"/profile/" + friend.id} style={{ textDecoration: "none" }} >
-                    <div className="user">
-                      <img
-                        src={
-                          friend.profile
-                            ?  friend.profile
-                            : pic
-                        }
-                        alt=""
-                        className="userImg"
-                      />
-                      <div className="userInfo">
-                        <div>
-                          <span className="userlog" >{friend.login}</span>
-                        </div>
-                        <span className="userlog" >{friend.lastname} {friend.firstname}</span>
-                      </div>
-                    </div>
-                  </Link>
-                </div>
+                <Link to={"/profile/" + friend.id} style={{ textDecoration: "none" }} >
+
+                  <div className="rightbarFollowing">
+                    <img
+                      src={
+                        friend.profile
+                          ?  friend.profile
+                          : "person/noAvatar.png"
+                      }
+                      alt=""
+                      className="rightbarFollowingImg"
+                    />
+                    <span className="rightbarFollowingName">{friend.login}</span>
+                  </div>
+                </Link>
               ))}
             </div>
-           
-          </div> 
-          <Rightbar/>
+            <Rightbar/>
+          </div>
         </div>
     </div>
-  ):
-  <div>
-    <Topbar/>
-        <div className="Container">
-          <Sidebar/>
-          <div className="friendsDisplay" >
-              <h2 className="titre">Aucun follower</h2>
-          </div> 
-          <Rightbar/>
-        </div>
-    </div>
-  ;
+  )
 }

@@ -287,7 +287,7 @@ function init(db) {
           req.file.detectedMimeType != "image/jpg" &&
           req.file.detectedMimeType != "image/png" &&
           req.file.detectedMimeType != "image/jpeg"
-        ) {
+        ) { 
           res.status(401).json({
             status: 401,
             message: "Invalid file type",

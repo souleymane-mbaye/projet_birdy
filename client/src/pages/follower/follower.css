@@ -2,24 +2,3 @@
     display: flex;
     width: 100%;
 }
-.friendsDisplay{
-    padding: 2% 20%;
-}
-.userCard{
-    border: 4px rgb(41, 57, 110) solid;
-    border-radius: 20%;
-    padding: 10px 100px;
-}
-.userImg{
-    width: 80px;
-    height: 80px;
-}
-.userlog{
-    padding: 10px 0px;
-    color: rgb(61, 59, 59);
-    font-style: bold;
-    font-size: 18px;
-}
-.titre{
-    padding-top: 50%;
-}
