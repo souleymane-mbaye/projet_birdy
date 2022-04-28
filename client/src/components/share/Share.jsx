@@ -22,21 +22,24 @@ export default function Share() {
     const newPost = {
       message: desc.current.value
     };
-    try { 
+    try {
       //ICI
-      const res=await axios.post("apimessages/user/"+user.user._id+"/messages", newPost);
-      if (file) {
-        const data = new FormData(); 
-        data.append("file", file);
-        console.log("new post",newPost);
-        
-        const test = await axios.post("/apimessages/user/"+user.user._id+"/messages/"+res.data.id+"/uploadpicture", data,{
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        });
+      const res=await axios.post("/apimessages/user/"+user.user._id+"/messages", newPost);
+      console.log("new post test",);
       
+      if (file) {
+        const data = new FormData();
+        const fileName = Date.now() + file.name;
+        data.append("name", fileName);
+        data.append("file", file);
+        newPost.img = fileName;
+        console.log("new post",newPost);
+         
+        await axios.post("/apimessages/user/"+user.user._id+"/messages/"+res.data.id+"/uploadpicture", data);
+        console.log("new post test",);
+
       }
+      window.location.reload();
     } catch (err) {
       console.log(err);
     }

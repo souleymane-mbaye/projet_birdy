@@ -86,7 +86,7 @@ function init(db_users, db_messages) {
       }
     })
     .delete(async (req, res) => {
-      try {
+      try { 
         if (req.params.userid != req.session.userid) {
           res.status(401).json({
             status: 401,
@@ -440,11 +440,14 @@ function init(db_users, db_messages) {
     //   })
     //   return;
     // }
+    console.log("body ",req.body)
 
     messages
       .addComment(message_id, req.params.userid, user.login, comment_text)
       .then((id) => res.status(201).send({ id: id }))
       .catch((err) => res.status(500).send(err));
+    
+    return
   });
 
   router.patch("/user/:userid/messages/edit-comment", async (req, res) => {
@@ -494,7 +497,7 @@ function init(db_users, db_messages) {
       .then((id) => res.status(201).json({ id: id }))
       .catch((err) => res.status(500).send("er"));
   }); 
-
+ 
   router.patch("/user/:userid/messages/delete-comment", async (req, res) => {
     const { message_id, comment_id } = req.body;
     // Erreur sur la requête HTTP

@@ -1,23 +1,24 @@
 import { Button, TextField } from "@mui/material";
-import { useRef, useEffect, useState } from "react";
+import { useRef,useContext, useEffect, useState } from "react";
 import axios from "axios";
 import React from "react";
 import Commentaire from "./Commentaire";
 import SendIcon from '@mui/icons-material/Send'
 import './comModel.css'
+import { AuthContext } from "../../context/AuthContext";
+
 
 export default function ComModel({ closeModal,post }) {
     const [com, setCom] = useState([]);
     const desc = useRef();
+    const { user } = useContext(AuthContext);
 
 
     useEffect(() => {
-        const fetchCom = async () => {
-          const res =await axios.get("/apimessages/user/"+ +"/messages/comment");
-    
+        
           const message=[]
           
-            for(let mes of res.data.messages){
+            for(let mes of post.comments){
               
                 message.push(mes)
               
@@ -27,18 +28,19 @@ export default function ComModel({ closeModal,post }) {
                return new Date(p2.date) - new Date(p1.date);
              }) 
            );
-        };
-        fetchCom();
+        
       }, [post]);
 
 
       const submitHandler = async (e) => {
         e.preventDefault();
         const newCom = {
-          message: desc.current.value
+            message_id: post._id,
+          comment_text: desc.current.value
         };
         try { 
-          const res=await axios.post("apimessages/user/"+  +"/messages", newCom);
+            if(desc.current.value!="")
+                await axios.patch("/apimessages/user/"+user.user._id  +"/messages/comment", newCom);
         } catch (err) {
           console.log(err);
         }
@@ -61,26 +63,28 @@ export default function ComModel({ closeModal,post }) {
         </div>
         <div className="body">
         {com.map((c) => (
-          <Commentaire key={c._id} com={c} />
+            <div>
+          <Commentaire key={c._id} com={c} /> <br/>
+          </div>
         ))}
           
         </div>
         <div className="footer">
          
-          <form className="post__form">
-              <TextField
+          <form className="post__form" onSubmit={submitHandler}>
+              <input
                 label="Commenter"
                 size="big"
                 variant="outlined"
                 className="post__input"
                 placeholder="ajouter un commentaire"
                 ref={desc}
-              ></TextField>
+              />
               <Button
                 variant="contained"
                 size="small"
                 endIcon={<SendIcon/>}
-                onClick={submitHandler}
+                
                 type="submit"
                 >
                 Envoyer

@@ -9,11 +9,10 @@ import Typography from '@mui/material/Typography';
 
 export default function Commentaire({com}) {
   return (
+      <div>
     <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
       <ListItem alignItems="flex-start">
-        <ListItemAvatar>
-          <img  src={com.pic} />
-        </ListItemAvatar>
+        
         <ListItemText
           
           secondary={
@@ -24,9 +23,9 @@ export default function Commentaire({com}) {
                 variant="body2"
                 color="text.primary"
               >
-                {com.author}
+                {com.user_login}
               </Typography>
-              {com.text}
+              {com.comment}
             </React.Fragment>
           }
         />
@@ -34,5 +33,6 @@ export default function Commentaire({com}) {
       <Divider variant="inset" component="li" />
       
     </List>
+    </div>
   );
 }
