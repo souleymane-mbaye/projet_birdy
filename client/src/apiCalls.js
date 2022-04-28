@@ -18,6 +18,6 @@ export const logoutCall = async (userCredential, dispatch) => {
     dispatch({ type: "LOGOUT", payload: res.data });
   } catch (err) {
     dispatch({ type: "LOGOUT_FAIL", payload: err });
-  }
+  } 
 };
 

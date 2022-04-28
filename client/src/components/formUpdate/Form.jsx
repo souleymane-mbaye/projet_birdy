@@ -22,17 +22,14 @@ export default function Form() {
     const submitHandler = async (e) => {
         e.preventDefault();
         
-       /*  if (file) {
+        if (file) {
           const data = new FormData();
-          const fileName = Date.now() + file.name;
-          data.append("name", fileName);
+          console.log("file",file);
           data.append("file", file);
-          update.img = fileName;
-          console.log(update);
           try {
-            await axios.post("/upload", data);
+            await axios.post("/api/upload/"+user.user.login, file);
           } catch (err) {}
-        } */
+        }
         try {
           
           //a revoir
@@ -57,8 +54,8 @@ export default function Form() {
           /* if(password.current.value!="" && password===passwordAgain){
             //rquette
           } */
-          window.location.reload();
-        } catch (err) {
+/*           window.location.reload();
+ */        } catch (err) {
           console.log("erreur");
         }
       };
@@ -74,9 +71,14 @@ export default function Form() {
                 style={{ display: "none" }}
                 type="file"
                 id="file"
+                name="file"
                 accept=".png,.jpeg,.jpg"
-                onChange={(e) => setFile(e.target.files[0])}
+                onChange={(e) => {
+                  setFile(e.target.files[0])
+                  setText("fichier ajouter avec succés")
+                }}
               />
+              <pre>             {text}</pre>
             </label>
 
 
@@ -118,9 +120,7 @@ export default function Form() {
                 <span className="focus-input100"></span>
                 
               </div> */}
-              <div>
-                <p>{text}</p>
-              </div>
+              
               
               <div className="container-login100-form-btn">
                 <button className="login100-form-btn" type="submit">

@@ -1,9 +1,9 @@
-const express = require("express");
 const Users = require("./entities/users.js");
 const Messages = require("./entities/messages.js");
 const upload = require("multer")();
 const fs = require("fs");
 const { promisify } = require("util");
+const express = require("express");
 const pipeline = promisify(require("stream").pipeline);
 
 function init(db_users, db_messages) {
@@ -35,7 +35,7 @@ function init(db_users, db_messages) {
           });
           return;
         }
-
+ 
         const { old_message_id, new_message } = req.body;
         // Erreur sur la requête HTTP
         if (!new_message || !old_message_id) {
@@ -86,7 +86,7 @@ function init(db_users, db_messages) {
       }
     })
     .delete(async (req, res) => {
-      try {
+      try { 
         if (req.params.userid != req.session.userid) {
           res.status(401).json({
             status: 401,
@@ -94,8 +94,9 @@ function init(db_users, db_messages) {
           });
           return;
         }
-
+        
         const { message_id } = req.body;
+        console.log("message _id de req body",req.body )
         // Erreur sur la requête HTTP
         if (!message_id) {
           res.status(400).json({
@@ -129,9 +130,11 @@ function init(db_users, db_messages) {
           });
           return;
         }
+        console.log("Avaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaant" )
 
         const id = await messages.remove(message_id);
         res.status(201).send({ id: id });
+        console.log("youpiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii" )
 
         return;
       } catch (e) {
@@ -437,11 +440,14 @@ function init(db_users, db_messages) {
     //   })
     //   return;
     // }
+    console.log("body ",req.body)
 
     messages
       .addComment(message_id, req.params.userid, user.login, comment_text)
       .then((id) => res.status(201).send({ id: id }))
       .catch((err) => res.status(500).send(err));
+    
+    return
   });
 
   router.patch("/user/:userid/messages/edit-comment", async (req, res) => {
@@ -490,8 +496,8 @@ function init(db_users, db_messages) {
       .editComment(message_id, comment_id, new_comment_text)
       .then((id) => res.status(201).json({ id: id }))
       .catch((err) => res.status(500).send("er"));
-  });
-
+  }); 
+ 
   router.patch("/user/:userid/messages/delete-comment", async (req, res) => {
     const { message_id, comment_id } = req.body;
     // Erreur sur la requête HTTP
@@ -536,14 +542,18 @@ function init(db_users, db_messages) {
       .removeComment(message_id, comment_id)
       .then((id) => res.status(201).send({ id: id }))
       .catch((err) => res.status(500).send(err));
-  });
+  }); 
 
   router.post(
-    "/user/:userid/messages/:messageid/upload-picture",
+    "/user/:userid/messages/:messageid/uploadpicture",
     upload.single("file"),
-    async (req, res) => {
+    async (req, res) => { 
       try {
+<<<<<<< HEAD
         console.log("testetetettetetettetetettetettetettettettetetetettette");
+=======
+        
+>>>>>>> fbcd574ae800b443103e25dfa663dde036e25092
         if (req.params.userid != req.session.userid) {
           res.status(401).json({
             status: 401,
@@ -567,7 +577,7 @@ function init(db_users, db_messages) {
             status: 401,
             message: "message id inconnu",
           });
-          return;
+          return; 
         }
 
         if (
@@ -613,7 +623,7 @@ function init(db_users, db_messages) {
         res.status(500).json({
           status: 500,
           message: "erreur interne",
-          details: (e || "Erreur inconnue").toString(),
+          details: (e || "Erreur inconnue" ).toString(),
         });
       }
     }
