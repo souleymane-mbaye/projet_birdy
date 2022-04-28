@@ -549,11 +549,7 @@ function init(db_users, db_messages) {
     upload.single("file"),
     async (req, res) => { 
       try {
-<<<<<<< HEAD
-        console.log("testetetettetetettetetettetettetettettettetetetettette");
-=======
         
->>>>>>> fbcd574ae800b443103e25dfa663dde036e25092
         if (req.params.userid != req.session.userid) {
           res.status(401).json({
             status: 401,

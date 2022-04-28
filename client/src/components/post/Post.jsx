@@ -8,6 +8,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { ThumbUp } from "@material-ui/icons";
 import noAvatar from "../../assets/person/noAvatar.png"
 import ComModel from "../comments/ComModel";
+//import path from "../../posts/";
 
 export default function Post({ post }) {
   const [like, setLike] = useState(post.likes.length);
@@ -104,7 +105,7 @@ const deleteHandler = async ()=>{
           {/*           //recuperation de l'image poste par le user*/} 
           {console.log("currente",post)}         
           {
-            post.picture!="" ? <img className="postImg" src={post.picture} />: <></>
+            post.picture!="" ? <img className="postImg" src={require("../../../public/data/uploads/posts/"+post.picture)} />: <></>
           }
 
         </div>

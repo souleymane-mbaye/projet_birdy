@@ -3,7 +3,7 @@ import {
   PermMedia,
   Label,
   Room,
-  EmojiEmotions,
+  EmojiEmotions, 
   Cancel,
 } from "@material-ui/icons";
 import { useContext, useRef, useState } from "react";
@@ -35,11 +35,7 @@ export default function Share() {
         newPost.img = fileName;
         console.log("new post",newPost);
          
-<<<<<<< HEAD
-        await axios.post("/apimessages/user/"+user.user._id+"/messages/"+res.data.id+"/upload-picture", data);
-=======
         await axios.post("/apimessages/user/"+user.user._id+"/messages/"+res.data.id+"/uploadpicture", data);
->>>>>>> fbcd574ae800b443103e25dfa663dde036e25092
         console.log("new post test",);
 
       }
