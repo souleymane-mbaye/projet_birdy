@@ -27,7 +27,7 @@ export default function  Sidebar() {
     try {
       await axios.delete("/api/user/"+user.user._id+"/logout");
       logoutCall(
-        { },
+        { }, 
         dispatch
       );
       history.push("/");

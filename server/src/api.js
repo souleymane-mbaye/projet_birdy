@@ -4,8 +4,13 @@ const upload = require("multer")();
 const fs = require("fs");
 const { promisify } = require("util");
 const pipeline = promisify(require("stream").pipeline);
+const multer = require("multer");
+
+
 
 function init(db) {
+
+
   const router = express.Router();
   // On utilise JSON
   router.use(express.json());
@@ -266,13 +271,15 @@ function init(db) {
     upload.single("file"),
     async (req, res) => {
       try {
+        console.log("helloooooooooooooooooooooooooooooooooooo ",req);
+        console.log("req.file",req.file);
         if (req.params.userid != req.session.userid) {
           res.status(401).json({
             status: 401,
             message: "Utilisateur non connecté",
           });
           return;
-        }
+        }  
 
         const user = await users.exists_id(req.params.userid);
         if (!user) {

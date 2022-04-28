@@ -1,5 +1,5 @@
 import "./post.css";
-import { Bookmark } from "@material-ui/icons";
+import { DeleteForever } from "@material-ui/icons";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { format } from "timeago.js";
@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { ThumbUp } from "@material-ui/icons";
 import noAvatar from "../../assets/person/noAvatar.png"
+import ComModel from "../comments/ComModel";
 
 export default function Post({ post }) {
   const [like, setLike] = useState(post.likes.length);
@@ -18,6 +19,7 @@ export default function Post({ post }) {
   //permet d'acceder au dossier a partir de n'import quelle position dans le site web
   //Et cela grace au fichier .env declarant le chemin pour atteindre les photo 
   const { user: currentUser } = useContext(AuthContext);
+  const [openModal, setOpenModal] = useState(false);
 
 
   /* on recupere une array contenant le liste des utilisateurs ayant liker le post */
@@ -55,9 +57,20 @@ export default function Post({ post }) {
     setLike(isLiked ? like - 1 : like + 1);
     setIsLiked(!isLiked);
   };
-  console.log("photo path",post);
-
+const deleteHandler = async ()=>{
+  try{
+    const idPost={
+      message_id: post._id
+    };
+    console.log("post info",post._id,"hello ",idPost);
+    await axios.delete("apimessages/user/"+currentUser.user._id+"/messages", idPost);
+    window.location.reload();
+  }catch(err){
+    console.log("erreur",err);
+  }
+}
   return user!=undefined?(
+    <div>
     <div className="post">
       <div className="postWrapper">
         <div className="postTop">
@@ -83,7 +96,7 @@ export default function Post({ post }) {
             <span className="postDate">{format(post.date)}</span>
           </div>
           <div className="postTopRight">
-            <Bookmark />
+            <DeleteForever onClick={deleteHandler} />
           </div>
         </div>
         <div className="postCenter">
@@ -106,10 +119,14 @@ export default function Post({ post }) {
             <span className="postLikeCounter">{like} like</span>
           </div>
           <div className="postBottomRight">
-            <span className="postCommentText">{post.comment} commentaires</span>
+            <span className="postCommentText" onClick={()=>{ setOpenModal(true);}}>commentaires</span>
           </div>
         </div>
+
       </div>
+
+    </div>
+          {openModal && <ComModel closeModal={setOpenModal} post={post}/>}
     </div>
   ):<></>;
 }
