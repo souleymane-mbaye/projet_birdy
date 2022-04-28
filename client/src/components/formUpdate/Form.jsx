@@ -21,29 +21,27 @@ export default function Form() {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        
+         
         if (file) {
           const data = new FormData();
-          console.log("file",file);
+          const fileName = Date.now() + file.name;
+          data.append("name", fileName);
           data.append("file", file);
           try {
-            await axios.post("/api/upload/"+user.user.login, file);
+            await axios.post("/api/upload/"+user.user.login, data);
           } catch (err) {}
         }
         try {
           
           //a revoir
-          if(email.current.value!=""){
-            //requette changer email
-          }
-          if(login.current.value!=""){
-            //requette changer email
-          }
-          if(prenom.current.value!=""){
-            //requette changer email
-          }
-          if(nom.current.value!=""){
-            //requette changer email
+          if(email.current.value!=""||login.current.value!=""||prenom.current.value!=""||nom.current.value!=""){
+            const update={
+              email:email.current.value,
+              login:login.current.value,
+              lastname:nom.current.value,
+              firstname:prenom.current.value,
+            };
+            await axios.patch("api/user/"+user.user._id,update);
           }
           if(bio.current.value!=""){
             const bioval=
@@ -51,11 +49,9 @@ export default function Form() {
             };
             await axios.patch("/api/user/"+ user.user._id+"/bio",bioval);
           }
-          /* if(password.current.value!="" && password===passwordAgain){
-            //rquette
-          } */
-/*           window.location.reload();
- */        } catch (err) {
+          
+          window.location.reload();
+        } catch (err) {
           console.log("erreur");
         }
       };

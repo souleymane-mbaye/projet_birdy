@@ -56,12 +56,12 @@ export default function  Sidebar() {
             </Link>
           </li> */}
           
-          <li className="sidebarListItem">
+         {/*  <li className="sidebarListItem">
             <Link to={""}  style={{ textDecoration: "none" , color: "darkslategray"}}>
               <Bookmark className="sidebarIcon" />
               <span className="sidebarListItemText">Favoris</span>
             </Link>
-          </li>
+          </li> */}
           <li className="sidebarListItem">
             <Link to={"/"}  style={{ textDecoration: "none" , color: "darkslategray"}} onClick={handleClick}>
               <LogoutIcon className="sidebarIcon" />

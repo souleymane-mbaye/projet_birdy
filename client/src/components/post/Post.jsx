@@ -97,7 +97,7 @@ const deleteHandler = async ()=>{
             <span className="postDate">{format(post.date)}</span>
           </div>
           <div className="postTopRight">
-            <DeleteForever onClick={deleteHandler} />
+            {post.author_id==currentUser.user._id ? <DeleteForever onClick={deleteHandler} />: <></> }
           </div>
         </div>
         <div className="postCenter">
