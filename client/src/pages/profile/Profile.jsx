@@ -30,9 +30,9 @@ export default function Profile() {
      
     };
     fetchUser();
-  }, [id,user]);
+  }, [id]);
   
-  return (
+  return user._id!=undefined?(
     
     <>
     {console.log(user,"user")}
@@ -50,12 +50,8 @@ export default function Profile() {
                 alt=""
               />
               {
-            user.profil!="" ? <img className="profileUserImg" src={require("../../../public/data/uploads/profil/"+user.profil)} />: <><img
-            className="profileUserImg"
-            src={pic}
-            alt=""
-          /></>
-          }
+                 user.profil!="" ? <img className="profileUserImg" src={require("../../../public/data/uploads/profil/"+user.profil)} />: <><img className="profileUserImg" src={pic} alt=""/></>
+              }
 
               
             </div>
@@ -72,5 +68,5 @@ export default function Profile() {
         </div>
       </div> 
     </>
-  );
+  ):<></>;
 }

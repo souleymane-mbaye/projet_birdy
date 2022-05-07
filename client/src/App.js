@@ -5,6 +5,8 @@ import Register from "./pages/register/Register";
 import Setup from "./pages/setup/Setup";
 import Update from "./pages/update/Update";
 import Follower from "./pages/follower/Follower";
+import Followings from "./pages/following/Following";
+
 import {
   BrowserRouter as Router,
   Switch,
@@ -36,9 +38,9 @@ function App() {
         <Route path="/followers/:id">
           <Follower/>
         </Route>
-        {/* <Route path="/followings/:id">
+         <Route path="/followings/:id">
           <Followings/>
-        </Route> */}
+        </Route> 
       </Switch>
     </Router>
   );

@@ -11,17 +11,17 @@ export default function Rightbar({ users }) {
   const [friends, setFriends] = useState([]);
   const { user: currentUser, dispatch } = useContext(AuthContext);
   const [followed, setFollowed] = useState(
-    currentUser.user.followings.includes(users?._id)
+    currentUser.user.followers.includes(users?._id)
   );
-
   const handleClick = async () => {
     try {
-      if (!followed) {
+      console.log("curent",currentUser.user._id)
+      if (followed) {
         await axios.delete("/apifriends/user/"+currentUser.user._id+"/friends/"+users._id);
         
       } else {
-        await axios.post("/apifriends/user/"+users._id+"/friends", {
-          login: currentUser.user.login,
+        await axios.post("/apifriends/user/"+currentUser.user._id+"/friends", {
+          login: users.login,
         });
         
       }
@@ -78,7 +78,7 @@ export default function Rightbar({ users }) {
               <Link to={`/followers/${users._id}`}  style={{ textDecoration: "none"}}>
                 <button className="rightbarFollowButton2" > Followers</button>
               </Link>
-              <Link to={`/followers/${users._id}`}  style={{ textDecoration: "none"}}>
+              <Link to={`/followings/${users._id}`}  style={{ textDecoration: "none"}}>
                 <button className="rightbarFollowButton2" > Followings</button>
               </Link>
             </span>

@@ -63,10 +63,15 @@ function initF(db) {
           });
           return;
         }
-        if (req.params._id != req.session.userid) {
+        console.log(req.params.userid,"ggggg", req.session.userid)
+        
+        if (req.params.userid != req.session.userid) {
+          
+
           res.status(401).json({
             status: 401,
             message: "Utilisateur non connecté",
+
           });
           return;
         }
