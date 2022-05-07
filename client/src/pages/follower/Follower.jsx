@@ -1,7 +1,6 @@
 import "./follower.css"
 import React from 'react'
 import Topbar from '../../components/topbar/Topbar'
-import CloseFriend from '../../components/closeFriend/CloseFriend'
 import { AuthContext } from "../../context/AuthContext";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";

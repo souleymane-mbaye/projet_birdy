@@ -60,11 +60,8 @@ export default function Post({ post }) {
   };
 const deleteHandler = async ()=>{
   try{
-    const idPost={
-      message_id: post._id
-    };
-    console.log("post info",post._id,"hello ",idPost);
-    await axios.delete("/apimessages/user/"+currentUser.user._id+"/messages", idPost);
+   
+    await axios.delete("/apimessages/user/"+currentUser.user._id+"/messages/"+ post._id);
     window.location.reload();
   }catch(err){
     console.log("erreur",err);

@@ -23,7 +23,67 @@ function init(db_users, db_messages) {
 
   const users = new Users.default(db_users);
   const messages = new Messages.default(db_messages);
-  
+  router
+    .route("/user/:userid/messages/:postid").delete(async (req, res) => {
+      try { 
+        if (req.params.userid != req.session.userid) {
+          res.status(401).json({
+            status: 401,
+            message: "Utilisateur non connecté",
+          });
+          return;
+        }
+        
+        const { message_id } = req.params.postid;
+        // Erreur sur la requête HTTP
+        if (!message_id) {
+          res.status(400).json({
+            status: 400,
+            message: "Requête invalide : message id nécessaires",
+          });
+          return;
+        }
+
+        const user = await users.exists_id(req.params.userid);
+        if (!user) {
+          res.status(401).json({
+            status: 401,
+            message: "Userid inconnu",
+          });
+          return;
+        }
+
+        const message = await messages.exists_id(message_id);
+        if (!message) {
+          res.status(401).json({
+            status: 401,
+            message: "message id inconnu",
+          });
+          return;
+        }
+        if (message.author_id != req.params.userid) {
+          res.status(401).json({
+            status: 401,
+            message: "userid is not the author of message",
+          });
+          return;
+        }
+
+        const id = await messages.remove(message_id);
+        res.status(201).send({ id: id });
+
+        return;
+      } catch (e) {
+        // Toute autre erreur
+        res.status(500).json({
+          status: 500,
+          message: "erreur interne",
+          details: (e || "Erreur inconnue").toString(),
+        });
+      }
+    })
+
+
   router
     .route("/user/:userid/messages")
     .put(async (req, res) => {
