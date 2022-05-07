@@ -88,10 +88,7 @@ export default function Share() {
             </label>
            
   
-            <div className="shareOption">
-              <EmojiEmotions htmlColor="goldenrod" className="shareIcon" />
-              <span className="shareOptionText">Emoji</span>
-            </div>
+            
           </div>
           <button className="shareButton" type="submit">
             Tweeter

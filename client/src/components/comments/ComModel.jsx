@@ -62,12 +62,16 @@ export default function ComModel({ closeModal,post }) {
             <b>Commentaires</b>
         </div>
         <div className="body">
+        <div className="wrapper">
         {com.map((c) => (
-            <div>
-          <Commentaire key={c._id} com={c} /> <br/>
-          </div>
+            
+                <div className="inner">
+                <Commentaire key={c._id} com={c} />
+                <hr/>
+                </div>
+            
         ))}
-          
+        </div>
         </div>
         <div className="footer">
          

@@ -6,10 +6,11 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
+import { Link } from 'react-router-dom';
 
 export default function Commentaire({com}) {
   return (
-      <div>
+      
     <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
       <ListItem alignItems="flex-start">
         
@@ -18,12 +19,12 @@ export default function Commentaire({com}) {
           secondary={
             <React.Fragment>
               <Typography
-                sx={{ display: 'inline' }}
-                component="span"
                 variant="body2"
                 color="text.primary"
               >
-                {com.user_login}
+                <Link to={`/profile/${com.user_id}`} style={{ textDecoration: "none", color: "black"}}>
+                    <b>{com.user_login}:</b>
+                </Link>
               </Typography>
               {com.comment}
             </React.Fragment>
@@ -33,6 +34,5 @@ export default function Commentaire({com}) {
       <Divider variant="inset" component="li" />
       
     </List>
-    </div>
   );
 }

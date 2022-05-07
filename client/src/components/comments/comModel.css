@@ -72,4 +72,14 @@
   #cancelBtn {
     background-color: crimson;
   }
+  .wrapper{
+    margin-left:auto;
+    margin-right:auto;
+    height:auto; 
+    width:auto; 
+  }
   
+ .inner {
+    border: 0px solid black;
+    
+}

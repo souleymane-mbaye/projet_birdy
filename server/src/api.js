@@ -274,8 +274,6 @@ function init(db) {
     upload.single("file"),
     async (req, res) => {
       try {
-        console.log("helloooooooooooooooooooooooooooooooooooo ",req);
-        console.log("req.file",req.file);
         if (req.params.userid != req.session.userid) {
           res.status(401).json({
             status: 401,
