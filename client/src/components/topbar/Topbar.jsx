@@ -43,15 +43,9 @@ export default function Topbar() {
           <span className="topbarLink">{user.user.login}</span>
         </Link>
         <Link to={`/profile/${user.user._id}`}>
-          <img
-            src={
-              user.user.profile
-                ? user.user.profile
-                : pic
-            }
-            alt=""
-            className="topbarImg"
-          />
+        {
+                 user.user.profil!="" ? <img className="topbarImg" src={require("../../../public/data/uploads/profil/"+user.user.profil)} />: <><img className="profileUserImg" src={pic} alt=""/></>
+              }
         </Link>
       </div>
     </div>
