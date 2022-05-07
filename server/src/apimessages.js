@@ -94,7 +94,7 @@ function init(db_users, db_messages) {
           });
           return;
         }
-        
+         
         const { message_id } = req.body;
         console.log("message _id de req body",req.body )
         // Erreur sur la requête HTTP
