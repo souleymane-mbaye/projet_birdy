@@ -40,7 +40,6 @@ export default function Follower() {
         <div className="Container">
           <Sidebar/>
           <div >
-            <p>testttt</p>
               <div className="rightbarFollowings">
               {friends.map((friend) => (
                 <Link to={"/profile/" + friend.id} style={{ textDecoration: "none" }} >

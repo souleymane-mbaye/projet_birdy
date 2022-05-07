@@ -34,8 +34,9 @@ function init(db_users, db_messages) {
           return;
         }
         
-        const { message_id } = req.params.postid;
+        const  message_id  = req.params.postid;
         // Erreur sur la requête HTTP
+        console.log("test")
         if (!message_id) {
           res.status(400).json({
             status: 400,

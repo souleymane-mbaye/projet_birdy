@@ -323,7 +323,7 @@ function init(db) {
         await pipeline(
           req.file.stream,
           fs.createWriteStream(
-            `${__dirname}/../../client/public/data/uploads/profile/${fileName}`
+            `${__dirname}/../../client/public/data/uploads/profil/${fileName}`
           )
         );
 

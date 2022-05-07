@@ -28,7 +28,7 @@ export default function Form() {
           data.append("name", fileName);
           data.append("file", file);
           try {
-            await axios.post("/api/upload/"+user.user.login, data);
+            await axios.post("/api/user/"+user.user._id+"/upload-profil", data);
           } catch (err) {}
         }
         try {
@@ -50,7 +50,7 @@ export default function Form() {
             await axios.patch("/api/user/"+ user.user._id+"/bio",bioval);
           }
           
-          window.location.reload();
+          //window.location.reload();
         } catch (err) {
           console.log("erreur");
         }

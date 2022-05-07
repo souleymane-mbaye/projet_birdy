@@ -28,7 +28,7 @@ db.messages.loadDatabase(function (err) {    // Callback is optional
 // });
 
 // vider la base de données
-// db.messages.remove({}, { multi: true }, function (err, numRemoved) {});
+// db.messages.remove({_id:"dCzshzGv6NlII60q"}, { multi: true }, function (err, numRemoved) {});
 
 // .route("/user/:user_id(\\d+)")
 

@@ -23,14 +23,19 @@ export default function Profile() {
       try{
         const res = await axios.get("/api/user/"+id);
         setUser(res.data);
+        
       }catch(e){
         console.log(e)
-      }     
+      }
+     
     };
     fetchUser();
-  }, [id]);
+  }, [id,user]);
+  
   return (
+    
     <>
+    {console.log(user,"user")}
       <Topbar />
       <div className="profile">
         <Sidebar />
@@ -44,15 +49,15 @@ export default function Profile() {
                 }
                 alt=""
               />
-              <img
-                className="profileUserImg"
-                src={
-                  user.profile
-                    ?  user.profile
-                    : pic
-                }
-                alt=""
-              />
+              {
+            user.profil!="" ? <img className="profileUserImg" src={require("../../../public/data/uploads/profil/"+user.profil)} />: <><img
+            className="profileUserImg"
+            src={pic}
+            alt=""
+          /></>
+          }
+
+              
             </div>
             <div className="profileInfo">
               <h4 className="profileInfoName">{user.login}</h4>
